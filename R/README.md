@@ -6,7 +6,8 @@ These files are ordered as given in [notes](../notes).
 
 ## Dependencies
 
-In general, files depend on `twsge` and `tidyverse`.
+In general, R code files depend on [`twsge`](https://cran.r-project.org/web/packages/tswge/index.html) and
+[`tidyverse`](https://www.tidyverse.org/).
 
 ## Session Info
 
