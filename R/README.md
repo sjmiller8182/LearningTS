@@ -1,8 +1,24 @@
 # R
 
+## Note R Files
+
 The files accompany the files in note.
 In general, these files intend to provide practical application of the information found in the note files.
 These files are ordered as given in [notes](../notes).
+
+The files are shown in order with links to the mds and Rmds in the table below.
+
+| file         | markdown                 | Rmarkdown                  |
+|--------------|--------------------------|----------------------------|
+| Stationarity | [md](./Stationarity.md)  | [Rmd](./Stationarity.Rmd)  |
+
+## Live Session Assignments
+
+The files in [live_session_assignments](./live_session_assignments) are assignments completed for the live class and demonstate some of the concepts.
+
+| Assignment Topic | markdown                 | Rmarkdown                  |
+|------------------|--------------------------|----------------------------|
+| Stationarity     | [md](./live_session_assignments/Live_Session_Assignments.md)  | [Rmd](./live_session_assignments/Live_Session_Assignments.Rmd)  |
 
 ## Dependencies
 
