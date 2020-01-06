@@ -12,14 +12,6 @@ The files are shown in order with links to the mds and Rmds in the table below.
 |--------------|--------------------------|----------------------------|
 | Stationarity | [md](./Stationarity.md)  | [Rmd](./Stationarity.Rmd)  |
 
-## Live Session Assignments
-
-The files in [live_session_assignments](./live_session_assignments) are assignments completed for the live class and demonstate some of the concepts.
-
-| Assignment Topic | markdown                 | Rmarkdown                  |
-|------------------|--------------------------|----------------------------|
-| Stationarity     | [md](./live_session_assignments/Live_Session_Assignments.md)  | [Rmd](./live_session_assignments/Live_Session_Assignments.Rmd)  |
-
 ## Dependencies
 
 In general, R code files depend on [`twsge`](https://cran.r-project.org/web/packages/tswge/index.html) and
@@ -55,3 +47,21 @@ other attached packages:
 loaded via a namespace (and not attached):
 [1] compiler_3.5.1 tools_3.5.1    yaml_2.2.0  
 ```
+
+## Class Files
+
+### Live Session Assignments
+
+The files in [live_session_assignments](./live_session_assignments) are assignments completed for the live class
+and demonstate some of the concepts.
+
+| Assignment Topic | markdown                 | Rmarkdown                  |
+|------------------|--------------------------|----------------------------|
+| Stationarity     | [md](./live_session_assignments/Live_Session_Assignments.md)  | [Rmd](./live_session_assignments/Live_Session_Assignments.Rmd)  |
+
+### Homework Assignments
+
+The files in [homework](./homework) are assignments completed for homework.
+The homework assignments are from problems in *Applied Time Series Analysis with R (2nd Ed.)* by
+Woodward, Gray, and Elliott.
+More details can be found at the [repo for the class](https://github.com/BivinSadler/MSDS-6373-Time-Series).
