@@ -1,0 +1,68 @@
+---
+title: "Using tswge"
+author: "Stuart Miller"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# tswge
+
+[tswge](https://cran.r-project.org/web/packages/tswge/index.html) is a R package for time series analysis.
+
+```{r}
+# load library
+library(tswge)
+
+# load some included datasets for work
+data(wtcrude) # west texas crude oil prices
+data(patemp) # Pennsylvania monthly temperature data
+```
+
+## Plotting
+
+### Creating Diagnostic Plots
+
+#### `plotts.sample.wge`
+
+For a quick set of diagonstic plot use `plotts.sample.wge`.
+This will plot the realization, the sample autocorrelations, periodogram, and Parzen window.
+
+```{r, diag-plots}
+plotts.sample.wge(patemp)
+```
+
+
+## Generating Data
+
+### Simulate Sinusoids with Noise
+
+The function *`gen.sigplusnoise.wge`* generates simulated data based on sinusoids with noise.
+It can be used to generate a one- or two-component sinusoid.
+
+Generate a realization from the model `x(t)=coef[1]*cos(2*pi*freq[1]*t+psi[1])+coef[2]*cos(2*pi*freq[2]*t+psi[2])+a(t)`
+
+**Examples**
+
+1. **One component sinusoid**
+
+The following code can be used to simulate 100 data points from the following equation:
+
+`x(t)=3*cos(2*pi*0.05*t+2)+a(t)`
+
+```{r, one-component-sine}
+X_t = gen.sigplusnoise.wge(n = 100, coef = c(3,0), freq = c(0.05, 0), psi = c(2, 0))
+```
+
+2. **Two component sinusoid**
+
+The following code can be used to simulate 100 data points from the following equation:
+
+`x(t)=3*cos(2*pi*0.05*t+0)+1.5*cos(2*pi*0.35*t+2)+a(t)`
+
+```{r, two-component-sine}
+X_t = gen.sigplusnoise.wge(n = 100, coef = c(3, 1.5), freq = c(0.05, 0.35), psi = c(0, 2))
+```
+
