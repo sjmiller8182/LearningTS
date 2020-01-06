@@ -1,0 +1,89 @@
+---
+title: "homework_1"
+author: "Stuart Miller"
+date: "January 5, 2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tswge)
+```
+
+# Homework 1
+
+## Problem 1.1
+
+Done by hand; not transcribed
+
+## Problem 1.2
+
+Load the west Texas crude oil dataset and the Pennsylvania monthly temperatures dataset from tswge.
+Plot the asmple autocorrelations, periodograms, and a Parzen window-based spectrial density estimate.
+Describe the behavior of the time series.
+
+### West Texas Crude
+
+The line plot of the realization shows that the data exhibits a non-cyclic behavior.
+The autocorrelation plot shows that there is a strong correlation between samples that are nearby (gamma > 0.5 for k <= 13).
+The Parzen window and Periodogram show a peak at 0 with no indication of cyclic behavior.
+There is no indication of the drop after the peak of x_t = 100.
+
+```{r}
+# load the west texas data
+data(wtcrude)
+# make the plots
+plotts.sample.wge(wtcrude)
+```
+
+### Pennsylvania Month Temperature
+
+The data exhibits cyclic behavior with a peak at about 0.08 on the periodogram and Parzen window.
+We would expect to see a cyclic behavior over the year (lambda = 1/12 = 0.0.83).
+The autocorrelations appear to be slowly damped with a period of 12.
+
+```{r}
+# load the west penn temperature data
+data(patemp)
+# make the plots
+plotts.sample.wge(patemp)
+```
+
+## Problem 1.4
+
+Realization 1
+  * autocorrelation: the time series exhibits wandering behavior, which corresponds to strong positive autocorrelations starting from 0 (d).
+  * spectral density: the time series exhibits wandering behavior, which corresponds a peak at 0 and exponentially approaching 0 as the frequency increases (a).
+  
+  Realization 2
+  * autocorrelation: the time series appears to have little structure, which corresponds to a no autocorrelations (a)
+  * spectral density: the time series appears to have little structure, which corresponds to a flat spectrum line (d)
+
+Realization 3
+  * autocorrelation: the time series exhibits cyclic behavior with a period of about 10, which matches the periodic autocorrelations in (b).
+  * spectral density: the time series exhibits cyclic behavior with a period of about 10, which matches the spectral density with a peak near 0.1 (c)
+
+Realization 4
+  * autocorrelation: the time series exhibits cyclic behavior with more than one frequency, matching autocorrelation plot (c), which shows osciallations in the main periodic correlations
+  * spectral density: the time series exhibits cyclic behavior with more than one frequency, matching the spectral density plot (b), which has two peaks
+
+## Problem 1.6
+
+Generate a realization of the following equation of length 100.
+Discuss the plots that show the periodic behavior.
+
+$$
+X_t = 3cos(2\pi(0.05)t) + 1.5cos(2\pi(0.35)t) + 2) + N(0,1)
+$$
+
+The sample autocorrelation plot shows the dominant frequency well with the period of 20 visible (0.05).
+The Parzen window and the periodogram both suggest a frequeny at 0.05 and 0.35.
+
+```{r}
+X_t = gen.sigplusnoise.wge(n = 100, coef = c(3, 1.5), freq = c(0.05, 0.35), psi = c(0, 2))
+plotts.sample.wge(X_t)
+```
+
+
+
+
