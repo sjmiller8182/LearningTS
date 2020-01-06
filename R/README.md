@@ -12,6 +12,8 @@ The files are shown in order with links to the mds and Rmds in the table below.
 |--------------|--------------------------|----------------------------|
 | Stationarity | [md](./Stationarity.md)  | [Rmd](./Stationarity.Rmd)  |
 
+**Note**: some details on tswge can be found in [using tswge](https://github.com/sjmiller8182/LearningTS/blob/master/R/Using_tswge.md).
+
 ## Dependencies
 
 In general, R code files depend on [`twsge`](https://cran.r-project.org/web/packages/tswge/index.html) and
