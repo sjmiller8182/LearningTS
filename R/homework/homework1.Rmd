@@ -14,7 +14,27 @@ library(tswge)
 
 ## Problem 1.1
 
-Done by hand; not transcribed
+For series given in text book calculate, gamma_0, gamma_1, rho_0, and rho_1.
+
+$$
+\bar{x} = 71.25
+$$
+
+$$
+\gamma_0 = \frac{1}{N} \sum^N_{t = 1} ( x_t - \bar{x} )^2 = \frac{279.5}{8} = 34.94
+$$
+
+$$
+\gamma_1 = \frac{1}{N} \sum^{N-1}_{t = 1} ( x_t - \bar{x} )( x_{t+1} - \bar{x} ) = \frac{117.94}{8} = 14.74
+$$
+
+$$
+\rho_0 = \frac{\gamma_0}{\gamma_0} = 1
+$$
+
+$$
+\rho_0 = \frac{\gamma_1}{\gamma_0} = \frac{14.74}{34.94} = 0.422
+$$
 
 ## Problem 1.2
 
