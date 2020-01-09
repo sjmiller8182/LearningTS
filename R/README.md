@@ -60,10 +60,13 @@ and demonstate some of the concepts.
 | Assignment Topic | markdown                 | Rmarkdown                  |
 |------------------|--------------------------|----------------------------|
 | Stationarity     | [md](./live_session_assignments/Live_Session_Assignments.md)  | [Rmd](./live_session_assignments/Live_Session_Assignments.Rmd)  |
+| Frequency Domain     | [md](./live_session_assignments/Live_Session_Assignment2.md)  | [Rmd](./live_session_assignments/Live_Session_Assignment2.Rmd)  |
 
 ### Homework Assignments
 
 The files in [homework](./homework) are assignments completed for homework.
+In some cases, the homework requires written out math.
+This is not rendered in GitHub because GitHub does not support MathJax. 
 The homework assignments are from problems in *Applied Time Series Analysis with R (2nd Ed.)* by
 Woodward, Gray, and Elliott.
 More details can be found at the [repo for the class](https://github.com/BivinSadler/MSDS-6373-Time-Series).
