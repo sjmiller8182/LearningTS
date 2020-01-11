@@ -1,0 +1,39 @@
+---
+title: "homework_2"
+author: "Stuart Miller"
+date: "January 10, 2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tswge)
+```
+
+# Homework 2
+
+## Problem 1.5
+
+```{r}
+dbplot = FALSE
+data("fig1.21a")
+plotts.parzen.wge(fig1.21a)
+```
+
+
+## Problem 1.6
+
+Generate a realization of the following equation of length 100.
+Discuss the plots that show the periodic behavior.
+
+$$
+X_t = 3cos(2\pi(0.05)t) + 1.5cos(2\pi(0.35)t) + 2) + N(0,1)
+$$
+
+The sample autocorrelation plot shows the dominant frequency well with the period of 20 visible (0.05).
+The Parzen window and the periodogram both suggest a frequeny at 0.05 and 0.35.
+
+```{r}
+X_t = gen.sigplusnoise.wge(n = 100, coef = c(3, 1.5), freq = c(0.05, 0.35), psi = c(0, 2))
+plotts.sample.wge(X_t)
+```
