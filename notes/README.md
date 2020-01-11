@@ -8,3 +8,4 @@ Note files are expected to be viewed in the given order.
 * [Glossary](./glossary.ipynb)
 * [Prelimiaries](./preliminaries.ipynb)
 * [Stationary Time Series](./stationarity.ipynb)
+* [Frequency Analysis](./frequency_domain.ipynb)
