@@ -1,0 +1,98 @@
+---
+title: "Unit 3"
+author: "Stuart Miller"
+date: "January 15, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tswge)
+library(tidyverse)
+```
+
+
+```{r}
+Realization = gen.sigplusnoise.wge(200,coef = c(5,0),freq = c(.1,0), vara = 10, sn = 1)
+ma = stats::filter(Realization,rep(1,5))/5
+plot(ma)
+```
+
+1. Load the Data
+
+```{r}
+
+Walmart = read.csv('./Walmart.csv',header = TRUE)
+Stor8Item1 = Walmart %>% dplyr::filter(item == 1 & store == 8)
+```
+
+2. Does the data come from a stationary process? 
+Make sure and address all 3 conditions.
+
+The realization is plotted below.
+There appears to be a periodic oscialliation seasonaly.
+This would indicate that the mean is time dependent, violating the assumption for stationarity.
+Additionally, there appears to be a slight trend.
+
+
+The variance appears to be constant over the movement.
+There does not appear to be sufficient evidence to suggest that the assumption of constant variance is not met.
+
+
+To assess the assuption of constant autocovariance, the data was plot into 4 segments and the ACF for these segments were plotted.
+The ACF are similar, thuse there does not appear to be sufficient evidence to suggest that the assumption of autocorrelation is not met.
+
+Since the assumption of constant mean appears to be violated,
+we conclude that there is sufficient evidence to suggest that this process is **not stationary**.
+
+```{r}
+plot(Stor8Item1$sales)
+acf(Stor8Item1$sales)
+```
+
+```{r}
+ts <- Stor8Item1$sales
+ts.split <- split(ts, ceiling(seq_along(ts)/(length(ts)/4)))
+
+par(mfrow=c(2,2))
+acf(ts.split[[1]])
+acf(ts.split[[2]])
+acf(ts.split[[3]])
+acf(ts.split[[4]])
+```
+
+
+3. The client believes there is yearly and weekly seasonality in the data.  
+Is there evidence of this with respect to the spectral density? 
+
+For a weekly trend, we would expect to see evidence of a frequency at 1/7 = 0.143.
+From the spectral density plot, evidence of this freqency exists.
+
+For a weekly trend, we would expect to see evidence of a frequency at 1/365 = 0.0027.
+This is very close to 0, we see a peak close to zero, but the year frequency is not distinushable from 0.
+
+```{r}
+parzen.wge(ts)
+```
+
+Applying a 5-point moving avarge filter to the sales data significantly smoothes out the variation in the data.
+A moving average filter is a low pass filter.
+A plot of the realization after filter shows a suppression in the high frequencies.
+There is still some evidence of a spectral peak at 0.14 (the weekly trend), but is suppressed.
+
+```{r}
+ma.5p <- stats::filter(ts, rep(1,5)/5)
+plot(ma.5p)
+parzen.wge(ma.5p[seq(from = 3, to = length(ma.5p)-2)])
+```
+
+The 51 point moving average filter is a much stronger low pass filter.
+The high frequeny is very suppressed.
+Plotting the spectral density, All the high frequency appears to be filtered out.
+
+```{r}
+ma.51p <- stats::filter(ts, rep(1,51)/51)
+plot(ma.51p)
+parzen.wge(ma.51p[seq(from = 26, to = length(ma.51p)-26)])
+```
+
