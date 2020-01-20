@@ -1,0 +1,156 @@
+---
+title: "homework_3"
+author: "Stuart Miller"
+date: "January 19, 2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tswge)
+library(tidyverse)
+```
+
+# Problem 2.1
+
+Create the signal and store it in `X_t`.
+
+```{r}
+X_t = gen.sigplusnoise.wge(n = 100, coef = c(3, 1.5), freq = c(0.05, 0.35), psi = c(0, 2))
+plotts.sample.wge(X_t)
+```
+
+For the following plot the realization, sample autocorrelations, and parzen window.
+Discuss the cyclic behavior.
+
+a. Apply a third order low-pass Butterworth filter with cut off at 0.2
+b. Apply a third order high-pass Butterworth filter with cut off at 0.2
+c. Apply a third order high-pass Butterworth filter with cut off at 0.2 and a third order low-pass Butterworth filter with cut off at 0.2
+
+```{r}
+X_t.lowpass <- butterworth.wge(X_t, order = 3, cutoff = 0.2, type = "low")
+X_t.highpass <- butterworth.wge(X_t, order = 3, cutoff = 0.2, type = "high")
+X_t.bandpass <- butterworth.wge(X_t.lowpass$x.filt, order = 3, cutoff = 0.2, type = "high")
+```
+
+## Part A
+
+Compared to the original data,
+the low-pass filter as removed the high frequency (the oscillations characterized by frequencies above 0.2).
+The realization appears to be a low freuqnecy signal.
+
+```{r}
+plotts.sample.wge(X_t.lowpass$x.filt)
+```
+
+## Part B
+
+Compared to the original data,
+the high-pass filter as removed the low frequency (the oscillations characterized by frequencies low 0.2).
+The realization appears to be a high freuqnecy signal.
+
+```{r}
+plotts.sample.wge(X_t.highpass$x.filt)
+```
+
+## Part C
+
+Compared to the original data,
+the band-pass filter as removed most of the oscillation (the oscillations characterized by frequencies low and above 0.2).
+The realization appears to be relatively flat with some noise.
+
+```{r}
+plotts.sample.wge(X_t.bandpass$x.filt)
+```
+
+# Problem 2.3
+
+Apply a 1st order difference filter to the time series.
+
+Like the butterworth high-pass filter, the differencing filter suppresses the low frequency. 
+However, the supression from the difference filter is not as strong - 
+there is still evidence of a frequency at 0.05.
+Note that a 20(n) dB/decade roll off.
+
+```{r}
+X_t.diff.filter <- artrans.wge(X_t, 1)
+plotts.sample.wge(X_t.diff.filter)
+```
+
+# Additional Problem
+
+Apply a 5-point moving average to the series you created in 2.1.
+How does it compare to the difference and Butterworth filters?
+Specifically, is it a low pass or high pass filter?
+
+The 5-point moving average filter is a low-pass filter.
+It does not reject the high frequency as strongly as the low-pass butterworth filter.
+However, based on the realization, the moving average filter may be practically sufficient for filtering the signal.
+
+```{r}
+ma.5p <- stats::filter(X_t, rep(1,5)/5)
+plotts.sample.wge(na.omit(ma.5p))
+```
+
+# Problem 3.4
+
+Generate an AR(1) process with n = 100, phi = +/- 0.9, +/- 0.5, and sigma^2_a = 1.
+
+a. plot the true autocorrelations  
+b. plot the true spectral density
+
+```{r}
+plotts.true.wge(n = 200, phi = 0.9)
+plotts.true.wge(n = 200, phi = -0.9)
+plotts.true.wge(n = 200, phi = 0.5)
+plotts.true.wge(n = 200, phi = -0.5)
+```
+
+c. calculate sigma^2_X
+
+$$
+\sigma^2_X = \frac{\sigma^2_a}{1 - \phi^2} 
+$$
+
+From the equation above, the answers are as follows:
+
+* phi with abs value 0.9: 0.81
+* phi with abs value 0.5: 1.33
+
+d. and e. plot the realizations and sample autocorrelations
+
+```{r}
+xp5 <- gen.arma.wge(n = 200, phi = 0.5, sn = 1)
+xm5 <- gen.arma.wge(n = 200, phi = -0.5, sn = 1)
+xp9 <- gen.arma.wge(n = 200, phi = 0.9, sn = 1)
+xm9 <- gen.arma.wge(n = 200, phi = -0.9, sn = 1)
+
+plotts.sample.wge(xp5)
+plotts.sample.wge(xm5)
+plotts.sample.wge(xp9)
+plotts.sample.wge(xm9)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
