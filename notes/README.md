@@ -9,3 +9,6 @@ Note files are expected to be viewed in the given order.
 * [Prelimiaries](./preliminaries.ipynb)
 * [Stationary Time Series](./stationarity.ipynb)
 * [Frequency Analysis](./frequency_domain.ipynb)
+* [Backshift Notation](./backshift_operator.ipynb)
+* [Filtering](./filtering.ipynb)
+* [Autoregressive Models](./autoregressive_models.ipynb)
