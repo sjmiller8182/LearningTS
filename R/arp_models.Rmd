@@ -1,0 +1,138 @@
+---
+title: "ARp_models"
+author: "Stuart Miller"
+date: "January 25, 2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tswge)
+```
+
+# Visualizing Realizations of AR(2) Models
+
+$$
+X_t - 0.2 X_{t-1} - 0.48 X_{t-2}
+$$
+
+## One positive root and one negative root
+
+```{r}
+x <- gen.arma.wge(200, phi = c(.2, 0.48), plot = F)
+plotts.sample.wge(x)
+```
+
+
+
+$$
+X_t -1.4 X_{t-1} + 0.48 X_{t-1}
+$$
+
+## Two Positive Roots
+
+```{r}
+x <- gen.arma.wge(200, phi = c(1.4, -0.48), plot = F)
+plotts.sample.wge(x)
+```
+
+## Two Negative Roots
+
+$$
+X_t + 1.4 X_{t-1} + 0.48 X_{t-1}
+$$
+
+
+
+```{r}
+x <- gen.arma.wge(200, phi = c(-1.4, -0.48), plot = F)
+plotts.sample.wge(x)
+```
+
+
+# Factor Tables for AR(p) Models
+
+
+## Model
+
+$$
+X_t - 1.95 X_{t-1} + 1.85 X_{t-2} -0.855 X_{t-3} = a_t
+$$
+
+## Factor Table
+
+```{r}
+factor.wge(phi = c(1.95, -1.85, 0.855))
+```
+
+## Plot the True ACF and Spectral Density
+
+```{r}
+plotts.true.wge(phi = c(1.95, -1.85, 0.855))
+```
+
+
+```{r}
+factor.wge(phi = c(1.59, -0.544, -0.511, .222))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
