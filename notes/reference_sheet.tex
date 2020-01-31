@@ -1,0 +1,187 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% writeLaTeX Example: A quick guide to LaTeX
+%
+% Source: Dave Richeson (divisbyzero.com), Dickinson College
+% 
+% A one-size-fits-all LaTeX cheat sheet. Kept to two pages, so it 
+% can be printed (double-sided) on one piece of paper
+% 
+% Feel free to distribute this example, but please keep the referral
+% to divisbyzero.com
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% How to use writeLaTeX: 
+%
+% You edit the source code here on the left, and the preview on the
+% right shows you the result within a few seconds.
+%
+% Bookmark this page and share the URL with your co-authors. They can
+% edit at the same time!
+%
+% You can upload figures, bibliographies, custom classes and
+% styles using the files menu.
+%
+% If you're new to LaTeX, the wikibook is a great place to start:
+% http://en.wikibooks.org/wiki/LaTeX
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[a4paper]{article}
+\usepackage{amssymb,amsmath,amsthm,amsfonts}
+\usepackage{multicol,multirow}
+\usepackage{calc}
+\usepackage{ifthen}
+\usepackage[landscape]{geometry}
+\usepackage[colorlinks=true,citecolor=blue,linkcolor=blue]{hyperref}
+
+
+\ifthenelse{\lengthtest { \paperwidth = 11in}}
+{ \geometry{top=.5in,left=.5in,right=.5in,bottom=.5in} }
+{\ifthenelse{ \lengthtest{ \paperwidth = 297mm}}
+	{\geometry{top=1cm,left=1cm,right=1cm,bottom=1cm} }
+	{\geometry{top=1cm,left=1cm,right=1cm,bottom=1cm} }
+}
+
+\pagestyle{empty}
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{0mm}%
+	{-1ex plus -.5ex minus -.2ex}%
+	{0.5ex plus .2ex}%x
+	{\normalfont\large\bfseries}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{0mm}%
+	{-1explus -.5ex minus -.2ex}%
+	{0.5ex plus .2ex}%
+	{\normalfont\normalsize\bfseries}}
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0mm}%
+	{-1ex plus -.5ex minus -.2ex}%
+	{1ex plus .2ex}%
+	{\normalfont\small\bfseries}}
+\makeatother
+\setcounter{secnumdepth}{0}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt plus 0.5ex}
+% -----------------------------------------------------------------------
+
+\title{Griffith QM Time Dependent Perturbation Theory CheatSheet}
+
+\begin{document}
+	
+	\raggedright
+	\footnotesize
+	
+	\begin{center}
+		\Large{\textbf{Time Series Analysis}} \\
+	\end{center}
+	\begin{multicols}{3}
+		\setlength{\premulticols}{1pt}
+		\setlength{\postmulticols}{1pt}
+		\setlength{\multicolsep}{1pt}
+		\setlength{\columnsep}{2pt}
+		
+		\section{Basics}
+		
+		\subsection{Sample Autocorrelations}
+		\begin{align*}
+		\gamma_0 = \frac{1}{N} \sum_{t=1}^{N} (x_t - \bar{x}) \\
+		\gamma_k = \frac{1}{N} \sum_{t=1}^{N-k} (x_t - \bar{x}) (x_{t+k} - \bar{x}) \\
+		\rho_0 = 1 \\
+		\rho_k = \frac{\gamma_k}{\gamma_0}
+		\end{align*}
+		
+		\section{Autoregressive Models}
+		
+		\subsection{AR(1)}
+		\begin{align*}
+		X_t- \phi X_{t-1} = a_t \\
+		(1 - \phi z) = 0
+		\end{align*}
+		
+		\subsection{AR(1) Properties}
+		\begin{itemize}
+			\item Positive $\phi$
+			\begin{itemize}
+				\item Realizations appear to be wandering (aperiodic)
+				\item Autocorrelations are damped exponentials.
+				\item Spectral densities have peaks at zero
+			\end{itemize}
+			\item Negative $\phi$
+			\begin{itemize}
+				\item Realizations appear to be oscillating
+				\item Autocorrelations are damped oscillating exponentials
+				\item Spectral densities have peaks at $f = 0.5$
+			\end{itemize}
+		\end{itemize}
+		
+		\subsection{AR(2) Models}
+		\begin{align*}
+		X_t - \phi_1 X_{t-1} - \phi_2 X_{t-2} = a_t \\
+		(1 - \phi_1 z - \phi_2 z^2) = 0
+		\end{align*}
+		
+		\subsection{AR(2) Properties}
+		\begin{itemize}
+			\item Two Real Roots - Both Pos
+			\begin{itemize}
+				\item The realization will appear to be wandering
+				\item The autocorrelations will be exponentially damped
+				\item There will be a peak at 0
+			\end{itemize}
+			\item Two Real Roots - Both Neg
+			\begin{itemize}
+				\item The realization will appear to be oscillating
+				\item The autocorrelations will be damped oscillating exponentials
+				\item There will be a peak at 0.5
+			\end{itemize}
+			\item Two Real Roots - One Each
+			\begin{itemize}
+				\item The realization will appear to be wandering and an oscillation will run on the realization
+				\item The autocorrelations will be exponentially damped with a hint of oscillation
+				\item There will be peaks at 0 and 0.5 in the spectal density
+			\end{itemize}
+			\item One Complex
+			\begin{itemize}
+				\item The realization will appear to have a pseudo-cyclic behavior with a cycle length of $\frac{1}{f_0}$
+				\item The autocorrelations will be damped exponentials oscillating in a sinusoid envelope with a frequency of $f_0$
+				\item There will be a peak at $f_0$ (between 0 and 0.5)
+			\end{itemize}
+		\end{itemize}
+		
+		$$
+		f_0 = \frac{1}{2\pi}cos^{-1} \left( \frac{\phi_1}{2 \sqrt{-\phi_2}}  \right)
+		$$
+		
+		\subsection{AR(p)}
+		
+		\begin{align*}
+		X_t = \beta + \phi_1 X_{t-1} + \phi_2 X_{t-2} + ... + \phi_2 X_{t-p} + a_t \\
+		x_t - \phi_1 B X_{t} - \phi_2 B^2 X_{t} - \phi_p B^p X_{t} = a_t
+		\end{align*}
+		
+		\subsubsection{Key Concepts}
+		\begin{itemize}
+			\item An AR(p) model is stationary if and only if all the roots of the characteristic equation are outside the unit circle.
+			\item Any AR(p) characteristic equation can be numerically factored into 1st and 2nd order elements.
+			\item These factors are interpreted as contributing AR(1) and AR(2) behaviors to the total behavior of the AR(p) model.
+		\end{itemize}
+		
+		\subsubsection{Factor Contributions}
+		AR(p) models reflect a contribution of AR(1) and AR(2) contributions.
+		Roots that are close to the unit circle will be the dominate behavior.
+		\begin{itemize}
+		\item First order factors $( 1 - \phi_1 B)$
+			\begin{itemize}
+				\item Associated with real roots
+				\item Contribute AR(1)-type behavior to the AR(p) model
+				\item Associated with a system frequency of 0 if $\phi_1$ is positive or 0.5 if $\phi_1$ is negative
+			\end{itemize}
+		\item Second order factors $( 1 - \phi_1 B - \phi_2 B^2 )$
+			\begin{itemize}
+				\item Associated with complex roots
+				\item Contribute cyclic AR(2) behavior to the AR(p) model
+				\item Associated with a system frequency of $f_0$
+		\end{itemize}
+		\end{itemize}
+	\end{multicols}
+	
+\end{document}
