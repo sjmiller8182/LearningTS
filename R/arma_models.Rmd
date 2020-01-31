@@ -1,0 +1,126 @@
+---
+title: "Moving Average"
+author: "Stuart Miller"
+date: "January 29, 2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tswge)
+library(tidyverse)
+```
+
+# Generating Data and Plots
+
+## generating MA(1) data
+
+```{r}
+gen.arma.wge(n = 100, theta = -0.99)
+gen.arma.wge(n = 100, theta = 0.99)
+gen.arma.wge(n = 100, theta = -0.99, sn = 5)
+gen.arma.wge(n = 100, theta = 0.99, sn = 5)
+```
+
+
+
+## True plots
+
+```{r}
+plotts.true.wge(theta = c(0.99))
+```
+
+
+## Generating MA(2) Data
+
+```{r}
+gen.arma.wge(n = 100, theta = c(0.9, -0.4))
+```
+
+
+## True plots
+
+```{r}
+plotts.true.wge(theta = c(0.9, -0.4))
+```
+
+# Invertability
+
+`factor.wge` can be used to factor MA models.
+This can be used to determine if models have roots in the unit circle.
+
+This model would be considered invertable.
+
+```{r}
+factor.wge(phi = c(1.6, -0.9))
+```
+
+This model is not invertable because one of the roots is in the unit circle.
+
+```{r}
+factor.wge(phi = c(1.6, 0.9))
+```
+
+# Blending MA and AR to Make ARMA
+
+## AR factors
+
+```{r}
+plotts.true.wge(phi = c(0.3, 0.9, 0.1, -0.8075))
+factor.wge(phi = c(0.3, 0.9, 0.1, -0.8075))
+```
+
+## MA factors
+
+```{r}
+plotts.true.wge(theta =  c(-0.9, -0.8, -0.71))
+factor.wge(c(-0.9, -0.8, -0.71))
+```
+
+## ARMA
+
+```{r}
+plotts.true.wge(theta =  c(-0.9, -0.8, -0.71), phi = c(0.3, 0.9, 0.1, -0.8075))
+```
+
+# Model section by AIC
+
+```{r}
+SWA <- read_csv('./swadelay.csv')
+plotts.wge(SWA$weather_delay)
+```
+
+
+```{r}
+aic5.wge(SWA$weather_delay)
+```
+
+# Calculating psi-weights
+
+## MA(1)
+
+```{r}
+psi.weights.wge(theta = 0.8, lag.max = 5)
+```
+
+## AR(1)
+
+```{r}
+psi.weights.wge(phi = 0.8, lag.max = 5)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
