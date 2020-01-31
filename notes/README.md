@@ -15,5 +15,5 @@ Note files are expected to be viewed in the given order.
 
 ## Other Files
 
+* [Reference Sheet](./reference_sheet.pdf): Reference sheet for tests ([src](https://github.com/sjmiller8182/LearningTS/blob/master/notes/reference_sheet.tex))
 * [Other Useful References](./UsefulReferences.md)
-* [Reference Sheet](./null): Place holder ([src](https://github.com/sjmiller8182/LearningTS/blob/master/notes/reference_sheet.tex))
