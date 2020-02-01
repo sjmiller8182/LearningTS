@@ -30,7 +30,165 @@ data %>% ggplot(aes(y = humidity, x = seq)) +
   ylab('Humidity')
 ```
 
+The best model based on AIC is an ARMA(4,1).
+
 ```{r}
 aic5.wge(data$humidity)
 ```
+
+
+# Select an ARMA model for the Walmart Data
+
+Replot the data.
+
+```{r}
+Walmart = read.csv('./Walmart.csv',header = TRUE)
+Stor9Item50 = Walmart %>% dplyr::filter(item == 50 & store == 9)
+plotts.sample.wge(Stor9Item50$sales)
+```
+
+
+
+```{r}
+aic5.wge(Stor9Item50$sales)
+```
+
+
+# Find $\rho1$
+
+Find $\rho_1$ by hand for the following model
+
+$$
+X_t = a_t - 0.8 a_{t-1} + 0.5 a_{t-2}
+$$
+
+**Solution**
+
+$$
+\rho_1 = \frac{-\theta_1 + \theta_1 \theta_2}{1 + \theta_1 + \theta_2}
+$$
+
+For the model, $\theta_1 = 0.8$ and $\theta_2 = -0.5$.
+Plugging in the values,
+
+$$
+\rho_1 = \frac{-0.8 + (0.8)(-0.5)}{1 + 0.8 - 0.5} = -0.923
+$$
+
+**R calculation for autocorrelation**
+
+```{r}
+(-.8 + 0.8*(-.5)) / (1 + 0.8 -0.5)
+```
+
+# Show the GLP form of a MA model
+
+Convert the model below into GLP form
+
+$$
+X_t = a_t - 0.8 a_{t-1} + 0.5 a_{t-2}
+$$
+
+$$
+X_t = \sum_{k=0}^{2} \psi_k a_{t-k} | \psi = \{ 1, -0.8, 0.5 \}
+$$
+
+
+```{r}
+psi.weights.wge(theta = c(0.8, -0.5), lag.max = 2 )
+```
+
+# Generate ARMA Relatizations
+
+The model from before.
+
+```{r}
+gen1 = gen.arma.wge(n = 100, phi = 0, theta = c(0.8, -0.5), plot = F)
+gen2 = gen.arma.wge(n = 100, phi = c(0.8, -0.5), plot = F)
+gen3 = gen.arma.wge(n = 100, phi = c(0.5,-0.6,0.5), theta = c(0.8, -0.5), plot = F)
+```
+
+
+
+```{r}
+plotts.sample.wge(gen1)
+```
+
+
+```{r}
+plotts.sample.wge(gen2)
+```
+
+
+
+
+```{r}
+plotts.sample.wge(gen3)
+```
+
+# Find a model for the SWA data
+
+Use AIC 5 to identify the top five quality models with respect to AIC for the cancelled flight data from the SWADelay.csv data set (column: arr_cancelled).
+Comment on which are AR, MA, and ARMA.
+
+```{r}
+SWA <- read_csv('../swadelay.csv')
+plotts.wge(SWA$arr_cancelled)
+```
+
+```{r}
+plotts.sample.wge(SWA$arr_cancelled)
+```
+
+
+Find the best fit model with `aic5.wge`.
+
+```{r}
+aic5.wge(SWA$arr_cancelled)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
