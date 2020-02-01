@@ -1,0 +1,36 @@
+---
+title: "Live_Session_Assignment_5"
+author: "Stuart Miller"
+date: "February 1, 2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(tswge)
+```
+
+# Select a Model for the Weather Data
+
+A stationary model will be selected for the weather data based on aic (`aic5.wge`).
+
+**Replot the data**
+
+```{r}
+data1 <- read.csv('./daily-climate-time-series-data/DailyDelhiClimateTest.csv')
+data2 <- read.csv('./daily-climate-time-series-data/DailyDelhiClimateTrain.csv')
+data <- rbind(data2, data1)
+
+data['seq'] <- seq_along(data[, 'humidity'])
+
+data %>% ggplot(aes(y = humidity, x = seq)) +
+  geom_line() +
+  xlab('Time (Sequence Number)') +
+  ylab('Humidity')
+```
+
+```{r}
+aic5.wge(data$humidity)
+```
+
