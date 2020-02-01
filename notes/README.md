@@ -11,7 +11,9 @@ Note files are expected to be viewed in the given order.
 * [Frequency Analysis](./frequency_domain.ipynb)
 * [Backshift Notation](./backshift_operator.ipynb)
 * [Filtering](./filtering.ipynb)
-* [Autoregressive Models](./autoregressive_models.ipynb)
+* [Autoregressive Models (AR)](./autoregressive_models.ipynb)
+* [Moving Average Models (MA)](./moving_average_models.ipynb)
+* [Autoregressive Moving Average Models (ARMA)](./arma_models.ipynb)
 
 ## Other Files
 
