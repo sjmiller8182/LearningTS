@@ -63,7 +63,7 @@
 \setlength{\parskip}{0pt plus 0.5ex}
 % -----------------------------------------------------------------------
 
-\title{Griffith QM Time Dependent Perturbation Theory CheatSheet}
+\title{Time Series Analysis}
 
 \begin{document}
 	
@@ -91,7 +91,7 @@
 		
 		\section{Autoregressive Models}
 		
-		\subsection{AR(1)}
+		\subsection{AR(1) Models}
 		\begin{align*}
 		X_t- \phi X_{t-1} = a_t \\
 		(1 - \phi z) = 0
@@ -151,11 +151,11 @@
 		f_0 = \frac{1}{2\pi}cos^{-1} \left( \frac{\phi_1}{2 \sqrt{-\phi_2}}  \right)
 		$$
 		
-		\subsection{AR(p)}
+		\subsection{AR(p) Models}
 		
 		\begin{align*}
-		X_t = \beta + \phi_1 X_{t-1} + \phi_2 X_{t-2} + ... + \phi_2 X_{t-p} + a_t \\
-		x_t - \phi_1 B X_{t} - \phi_2 B^2 X_{t} - \phi_p B^p X_{t} = a_t
+		X_t - \beta + \phi_1 X_{t-1} + \phi_2 X_{t-2} + ... + \phi_2 X_{t-p} = a_t \\
+		x_t - \phi_1 B X_{t} - \phi_2 B^2 X_{t} - ... - \phi_p B^p X_{t} = a_t
 		\end{align*}
 		
 		\subsubsection{Key Concepts}
@@ -180,8 +180,59 @@
 				\item Associated with complex roots
 				\item Contribute cyclic AR(2) behavior to the AR(p) model
 				\item Associated with a system frequency of $f_0$
+			\end{itemize}
 		\end{itemize}
+	
+	\section{Moving Average Models}
+	
+		\subsection{MA(1) Models}
+		\begin{align*}
+		X_t = a_t - \theta a_{t-1}\\
+		(1 - \theta_1 z) = 0 \\
+		\rho_0 = 0 \\
+		\rho_1 = \frac{-\theta_1}{1 + \theta_1^2} \\
+		\rho_k = 0 |_{k>1}
+		\end{align*}
+		
+		\subsection{MA(2) Models}
+		\begin{align*}
+		X_t = a_t - \theta_1 a_{t-1} - \theta_2 a_{t-2} \\
+		(1 - \theta_1 z - \theta_2 z^2) = 0 \\
+		\rho_0 = 0 \\
+		\rho_1 = \frac{-\theta_1 + \theta_1 \theta_2}{1 + \theta_1^2 + \theta_2^2} \\
+		\rho_k = 0 |_{k>2}
+		\end{align*}
+		
+		\subsection{MA(q) Models}
+		\begin{align*}
+		X_t = a_t-\theta_1 a_{t-1}-...-\theta_2 a_{t-q} \\
+		x_t = a_t - \theta_1 B a_{t} - ... - \theta_q B^q X_{t}
+		\end{align*}
+		
+			\subsubsection{Key Concepts}
+			\begin{itemize}
+				\item MA models are a finite GLP
+				\item MA models are always stationary
+				\item MA models are invertable iff all the roots are outside of the unit circle.
+			\end{itemize}
+	
+	\section{ARMA(p,q) Models}
+	
+		\begin{align*}
+		X_t = \beta +\phi_1 X_{t-1}+ ... +\phi_2 X_{t-p} = a_t-\theta_1 a_{t-1}-...-\theta_2 a_{t-q} \\
+		x_t - \phi_1 B X_{t} - ... - \phi_p B^p X_{t} = a_t - \theta_1 B a_{t} - ... - \theta_q B^q X_{t}
+		\end{align*}
+		
+		\subsection{Key Concepts}
+		\begin{itemize}
+			\item Valid when the model is stationary and invertable
+			\begin{itemize}
+				\item Stationary: roots of $\phi (z)$ are outside the unit circle
+				\item Invertable: roots of $\theta (z)$ are outside the unit circle
+			\end{itemize}
+			\item $\phi (z)$ and $\theta (z)$ have no common factors (check)
 		\end{itemize}
+	
 	\end{multicols}
 	
 \end{document}
