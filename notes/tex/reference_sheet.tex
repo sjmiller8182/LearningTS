@@ -230,7 +230,70 @@
 			\end{itemize}
 			\item $\phi (z)$ and $\theta (z)$ have no common factors (check)
 		\end{itemize}
+
+\newpage
+
+	\section{General Linear Processes}
 	
+		\subsection{General Form}
+		Use \texttt{psi.weights.wge} to calculate $\psi$s
+			\begin{align*}
+			X_t - \mu = \sum_{j=0}^\infty \psi_j a_{t-j}
+			\end{align*}
+		
+		\subsection{MA GLP}
+		This is a finite GLP
+			\begin{align*}
+			X_t - \mu = \sum_{j=0}^\infty \psi_j a_{t-j} \\
+			\psi_0 = 1
+			\end{align*}
+		
+		\subsection{AR GLP}
+		This is an infinite GLP
+			\begin{align*}
+			X_t - \mu = \sum_{j=0}^\infty \psi_j a_{t-j} \\
+			\psi_0 = 1
+			\end{align*}
+	
+	\section{Filtering}
+	
+		Filters transform time series.
+		
+		$$
+		Z_t \rightarrow H(B) \rightarrow X_t
+		$$
+		
+		$$
+		X(t) =  Z(t) H(B)
+		$$
+		
+		There are four basic types of filters.
+		
+		\begin{itemize}
+			\item High pass - filters out low frequencies
+			\item Low pass - filters out high frequencies
+			\item Band pass - filters out frequencies outside the band
+			\item Band stop - filters out frequencies inside the band
+		\end{itemize}
+	
+		\subsection{Difference Filter}
+			The first order difference is expressed by the following
+			\begin{align*}
+			X_t = Z_t - Z_{t-1} \\
+			H(B) = B^0 - B
+			\end{align*}
+			This is a high pass filter.
+			
+		\subsection{Moving Average Filter}
+			A 5-point moving average filter can be expressed as 
+			\begin{align*}
+			X_t = \frac{Z_{t+2} + Z_{t+1} + Z_t + Z_{t-1} + Z_{t-2}}{5} \\
+			H(B) = \frac{B^{-2} + B^{-1} + B^0 + B + B^2}{5}
+			\end{align*}
+			This is a low pass filter.
+			
+		\subsection{Band-Type Filter}
+			High pass and low pass filters can be combined to produce band pass and band stop filters.
 	\end{multicols}
 	
 \end{document}

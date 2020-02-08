@@ -1,0 +1,112 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Reference Sheet For Time Series (MSDS6373)
+%
+%
+% Sources:
+% https://github.com/sjmiller8182/LearningTS/blob/master/notes/tex/reference_sheet.tex
+% https://github.com/sjmiller8182/LearningTS/blob/master/notes/reference_sheet.pdf
+%
+% Provided freely under the MIT license
+%
+% Feel free to distribute, but keep this and the following referral.
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% writeLaTeX Example: A quick guide to LaTeX
+%
+% Source: Dave Richeson (divisbyzero.com), Dickinson College
+% 
+% A one-size-fits-all LaTeX cheat sheet. Kept to two pages, so it 
+% can be printed (double-sided) on one piece of paper
+% 
+% Feel free to distribute this example, but please keep the referral
+% to divisbyzero.com
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[a4paper]{article}
+\usepackage{amssymb,amsmath,amsthm,amsfonts}
+\usepackage{multicol,multirow}
+\usepackage{calc}
+\usepackage{ifthen}
+\usepackage[landscape]{geometry}
+\usepackage[colorlinks=true,citecolor=blue,linkcolor=blue]{hyperref}
+
+
+\ifthenelse{\lengthtest { \paperwidth = 11in}}
+{ \geometry{top=.5in,left=.5in,right=.5in,bottom=.5in} }
+{\ifthenelse{ \lengthtest{ \paperwidth = 297mm}}
+	{\geometry{top=1cm,left=1cm,right=1cm,bottom=1cm} }
+	{\geometry{top=1cm,left=1cm,right=1cm,bottom=1cm} }
+}
+
+\pagestyle{empty}
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{0mm}%
+	{-1ex plus -.5ex minus -.2ex}%
+	{0.5ex plus .2ex}%x
+	{\normalfont\large\bfseries}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{0mm}%
+	{-1explus -.5ex minus -.2ex}%
+	{0.5ex plus .2ex}%
+	{\normalfont\normalsize\bfseries}}
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0mm}%
+	{-1ex plus -.5ex minus -.2ex}%
+	{1ex plus .2ex}%
+	{\normalfont\small\bfseries}}
+\makeatother
+\setcounter{secnumdepth}{0}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt plus 0.5ex}
+% -----------------------------------------------------------------------
+
+\title{tswge Quick Reference}
+
+\begin{document}
+	
+	\raggedright
+	\footnotesize
+	
+	\begin{center}
+		\Large{\textbf{\texttt{tswge} Quick Reference}} \\
+	\end{center}
+	\begin{multicols}{3}
+		\setlength{\premulticols}{1pt}
+		\setlength{\postmulticols}{1pt}
+		\setlength{\multicolsep}{1pt}
+		\setlength{\columnsep}{2pt}
+		
+		\section{Plotting}
+		
+		\begin{itemize}
+			\item \texttt{plotts.sample.wge} - 4 sample plots
+			\item \texttt{plotts.parzen.wge} - parzen window (can be truncated)
+			\item \texttt{plotts.true.wge} - true ACF and true spectral density
+		\end{itemize}
+
+		\section{Factor Analysis}
+		
+		\begin{itemize}
+			\item \texttt{factor.wge} - factor characteristic equations into 1st and 2nd order components
+			\item \texttt{factor.comp.wge} - decompose a sampled signal into factors
+		\end{itemize}
+		
+		\section{Simulation}
+		
+		\begin{itemize}
+			\item \texttt{gen.sigplusnoise.wge} - sinusiod with normal noise
+			\item \texttt{gen.arma.wge} - arma signals
+		\end{itemize}
+		
+		\section{Filtering}
+		
+		\begin{itemize}
+			\item \texttt{butterworth.wge} - apply a butterworth filter a time series
+			\item \texttt{stats::filter} - general function for filtering e.g.
+			5-pt MA Filter: \texttt{stats::filter(X\_t, rep(1,5)/5)}
+		\end{itemize}
+		
+	\end{multicols}
+	
+\end{document}
