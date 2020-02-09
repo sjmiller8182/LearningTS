@@ -80,7 +80,8 @@
 		\section{Plotting}
 		
 		\begin{itemize}
-			\item \texttt{plotts.sample.wge} - 4 sample plots
+			\item \texttt{plotts.wge} - plot a realization
+			\item \texttt{plotts.sample.wge} - 4 sample plots (realization, parzen window, periodogram, spectral density)
 			\item \texttt{plotts.parzen.wge} - parzen window (can be truncated)
 			\item \texttt{plotts.true.wge} - true ACF and true spectral density
 		\end{itemize}
@@ -90,18 +91,50 @@
 		\begin{itemize}
 			\item \texttt{factor.wge} - factor characteristic equations into 1st and 2nd order components
 			\item \texttt{factor.comp.wge} - decompose a sampled signal into factors
+			\item \texttt{mult.wge} - multiply together factors (up to 6)
+			\begin{itemize}
+				\item Use \texttt{\$model.coef} to access the coefficients
+			\end{itemize}
 		\end{itemize}
 		
 		\section{Simulation}
 		
 		\begin{itemize}
-			\item \texttt{gen.sigplusnoise.wge} - sinusiod with normal noise
+			\item \texttt{gen.sigplusnoise.wge} - linear or sinusiod signal with normal noise
+			\begin{itemize}
+				\item Linear model: \texttt{b0, b1}
+				\item Sinusiod: \texttt{coef, freq, psi} (2 component vectors)
+				\item AR noise: \texttt{phi}
+			\end{itemize}
 			\item \texttt{gen.arma.wge} - arma signals
+				\begin{itemize}
+					\item \texttt{p}: AR vector
+					\item \texttt{q} MA vector
+				\end{itemize}
+			\item \texttt{gen.arima.wge} - arima signals
+				\begin{itemize}
+					\item \texttt{p}: AR vector
+					\item \texttt{q}: MA vector
+					\item \texttt{d}: Difference order
+				\end{itemize}
+			\item \texttt{gen.aruma.wge} - aruma signals
+				\begin{itemize}
+					\item \texttt{p}: AR vector
+					\item \texttt{q}: MA vector
+					\item \texttt{d}: Difference order
+					\item \texttt{s}: Seasonality
+					\item \texttt{lambda}: Other non-stationary components
+				\end{itemize}
 		\end{itemize}
 		
 		\section{Filtering}
 		
 		\begin{itemize}
+			\item \texttt{artrans.wge} - apply an AR-type transformation to a series
+			\begin{itemize}
+				\item First order difference: \texttt{artrans.wge(x, phi.tr = 1)}
+				\item Subtract monthly difference: \texttt{artrans.wge(x, phi.tr = c(rep(0,11),1))}
+			\end{itemize}
 			\item \texttt{butterworth.wge} - apply a butterworth filter a time series
 			\item \texttt{stats::filter} - general function for filtering e.g.
 			5-pt MA Filter: \texttt{stats::filter(X\_t, rep(1,5)/5)}
