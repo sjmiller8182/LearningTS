@@ -15,7 +15,11 @@ Note files are expected to be viewed in the given order.
 * [Moving Average Models (MA)](./moving_average_models.ipynb)
 * [Autoregressive Moving Average Models (ARMA)](./arma_models.ipynb)
 
-## Other Files
+## Reference Sheets
 
 * [Reference Sheet](./reference_sheet.pdf): Reference sheet for tests ([src](./tex/reference_sheet.tex))
+* [`tswge` Quick Reference Sheet](./tswge_quick_reference.pdf): Reference sheet for `tswge` an R package ([src](./tex/tswge_quick_reference.tex))
+
+## Other Files
+
 * [Other Useful References](./UsefulReferences.md)
