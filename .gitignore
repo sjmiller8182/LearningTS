@@ -1,7 +1,7 @@
 
 # project ignore
 
-./notes/tex/*.pdf
+notes/tex/*.pdf
 
 # Reference
 # https://github.com/github/gitignore
