@@ -1,0 +1,396 @@
+---
+title: "homework_6"
+author: "Stuart Miller"
+date: "February 9, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tswge)
+data("hadley")
+```
+
+# Homework 6
+
+## Problem 5.1
+
+### Part A
+
+Plot the data.
+
+```{r}
+plotts.wge(hadley)
+```
+
+
+### Part B
+
+Fit a regression model as `hadley` ~ `time`.
+
+```{r}
+time <- seq_along(hadley)
+model <- lm(hadley ~ time)
+summary(model)
+```
+
+### Part C
+
+Find and plot the residuals for the linear model.
+
+
+
+```{r}
+plot(model$residuals)
+```
+
+
+### Part D
+
+The residuals could have come from a stationary model.
+Constant mean apepars to be reasonable.
+The varaince appears to be constant.
+The autocorrelation for the first half of the data and the second half of the data are very similar.
+
+```{r}
+resid.size <- length(model$residuals)
+acf(model$residuals[1:resid.size/2])
+acf(model$residuals[resid.size/2:resid.size])
+```
+
+
+### Part E
+
+The autocorrelations of `hadley` are more slowly damping than the residuals.
+There is some suggestion of oscillatory behavior, but it is not strong.
+
+The autocorrelations of the residuals of the linear model fall off much more rapidly.
+Additionally, there is stronger evidence of oscillator behavior.
+
+```{r}
+plotts.sample.wge(hadley)
+```
+
+```{r}
+plotts.sample.wge(model$residuals)
+```
+
+
+## Problem 5.2
+
+### Part A
+
+Generate 3 realizations for the following model.
+Do any of the models appear to have a linear trend?
+
+The first model appears to have a negative linear trend.
+
+$$
+X_t - 0.66 X_{t-1} + 0.02 X_{t-2} - 0.10 X_{t-3} - 0.24 X_{t-4} = a_t
+$$
+
+```{r}
+phi <- c(0.66, -0.02, 0.1, 0.24)
+x1 <- gen.arma.wge(n = 150, phi = phi, plot = T, sn = 1)
+x2 <- gen.arma.wge(n = 150, phi = phi, plot = T, sn = 42)
+x3 <- gen.arma.wge(n = 150, phi = phi, plot = T, sn = 35)
+```
+
+### Part B
+
+Plot 4 realizations for the following model and compare to the hadley realization.
+
+The forth realization looks similar to the hadley realization.
+The trends appear to be strong in the other realizations.
+
+$$
+X_t = -0.526 + 0.0044t + Z_t
+$$
+
+Where
+
+$$
+(1 - 0.614 B  + 0.044 B^2 - 0.077 B^3 - 0.0206 B^4)  Z_t = 0
+$$
+
+```{r}
+phi <- c(0.614, -0.044, 0.077, 0.0206)
+x1 <- gen.sigplusnoise.wge(n = 150, b0 = -0.526, b1 = 0.0044,
+                           phi = phi, sn = 1, vara = 0.01)
+x2 <- gen.sigplusnoise.wge(n = 150, b0 = -0.526, b1 = 0.0044,
+                           phi = phi, sn = 42, vara = 0.01)
+x3 <- gen.sigplusnoise.wge(n = 150, b0 = -0.526, b1 = 0.0044,
+                           phi = phi, sn = 37, vara = 0.01)
+x4 <- gen.sigplusnoise.wge(n = 150, b0 = -0.526, b1 = 0.0044,
+                           phi = phi, sn = 35, vara = 0.01)
+```
+
+
+## Problem 5.3 (a, b, d)
+
+For the following models generate a realziation and discuss the observable featrues.
+Additionalyl identify if the model is
+
+* Stationary
+* Non-stationary
+* Seasonal (and non-stationary)
+
+$$
+\left(1- 1.2B + 0.8 B^2 \right) (1-B) X_t = a_t
+$$
+
+$$
+\left(1- 1.2B + 0.8 B^2 \right) (1-B)^2 X_t = a_t
+$$
+
+$$
+\left(1- 1.2B + 0.8 B^2 \right) (1-B)^2 \left( 1 - B^4 \right)
+\left(1 + B + B^2 \right) X_t = a_t
+$$
+
+### Realizations
+
+```{r}
+phi = c(1.2, -0.8)
+gen.aruma.wge(n = 200, phi = phi, d = 1, sn = 3)
+gen.aruma.wge(n = 200, phi = phi, d = 2, sn = 3)
+md <- gen.aruma.wge(n = 200, phi = phi, d = 1, s= 4, lambda = c(-1,-1), sn = 3)
+```
+
+### Part A
+
+Since this model has a root on the unit circle, it is non-stationary.
+The realization exhibits a psuedo-periodic behavior,
+which is consistent with the complex root in the AR porition of the model.
+
+```{r}
+factor.wge(phi = phi)
+```
+
+### Part B
+
+The realization almost appears to be a linear trend.
+This model has two roots on the unit circle, which dominate the realiztion behavior.
+
+### Part D
+
+This model contains a quarterly seasonal factor, 2 roots on the unit circle,
+and addtional non-stationary factors.
+The model is dominated by the roots on the unit circle. 
+The quarterly oscillatory behavior is also expressed.
+
+```{r}
+model.d <- mult.wge(phi,c(1,1),c(rep(0,3),1),c(-1,-1))
+factor.wge(model.d$model.coef)
+```
+
+```{r}
+plotts.sample.wge(md)
+```
+
+
+## Problem 5.5
+
+### Part A
+
+The factored model is 
+
+$$
+(1-B)^2 (1 + B + B^2)(1 - B + 0.5 B^2) = 1-1.7B+0.8B^2
+$$
+
+There are no canceling factors, the model is an ARUMA(2,4,2).
+
+#### AR Factor Table
+
+```{r}
+factor.wge(c(3, -4.5, 5, -4, 2, -0.5))
+```
+
+#### MA Factor Table
+
+```{r}
+factor.wge(c(1.7,-0.8))
+```
+
+
+### Part B
+
+The factored model is 
+
+$$
+(1-B) (1 + B + 0.8B^2) (1 + 0.5 B^2) (1 -0.5B) = 0
+$$
+
+There are no canceling factors, the model is an ARUMA(5,1,0).
+
+#### AR Factor Table
+
+```{r}
+factor.wge(c(0.5, -0.3, 0.95, -0.3, 0.35, -0.2))
+```
+
+#### MA Factor Table
+
+There are no MA factors
+
+
+### Part C
+
+The factored model is 
+
+$$
+(1+B) (1-1.5B+1B^2) (1-1B+0.8B^2) (1+0.5B^2) = (1+0.9B^2)
+$$
+
+There are no canceling factors, the model is an ARUMA(4,3,2).
+
+#### AR Factor Table
+
+```{r}
+factor.wge(c(1.5, -1.3, -0.35, 1, - 1.35 , 0.7, -0.4))
+```
+
+#### MA Factor Table
+
+```{r}
+factor.wge(c(0, -0.9))
+```
+
+
+### Part D
+
+The factored model is 
+
+$$
+(1-B)^2 (1+B) (1+B+B^2) (1+0.5B) = (1+0.9B) (1-0.9B)
+$$
+
+There are no canceling factors, the model is an ARUMA(1,5,2).
+
+#### AR Factor Table
+
+```{r}
+factor.wge(c(0.5, 0.5, 0, 1, -0.5, -0.5))
+```
+
+#### MA Factor Table
+
+```{r}
+factor.wge(c(0, 0.81))
+```
+
+
+## Problem 5.7
+
+### Part A
+
+The roots of unit are
+
+* $\pm 1$
+* $-0.5000 \pm 0.8660i$
+* $0.5000 \pm 0.8660i$
+
+```{r}
+factor.wge(c(rep(0,5),1))
+```
+
+### Part B and Part D
+
+There is clear evidence of psuedo-periodic behavior.
+The autocorrelations do not match what would be expected from a theoretical prespective, but the strongest autocorrelations occur at intervals of 6, which is the expected behavior.
+The frequencies shown in the Parzen are similar to the ones in the factor table.
+
+```{r}
+x <- gen.aruma.wge(n = 120, s = 6, sn = 6)
+plotts.sample.wge(x)
+```
+
+### Part C
+
+The true autocorrelations have a magnitude of 1 and occur periodically in intervals of 6.
+There are frequencies shown in true spectral density match the frequencies shown in the factor table.
+
+```{r}
+plotts.true.wge(phi = c(rep(0,5),0.9999))
+```
+
+### Part D
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

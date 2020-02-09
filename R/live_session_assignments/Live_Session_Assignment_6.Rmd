@@ -1,0 +1,201 @@
+---
+title: "Live_Session_Assignemnt_6"
+author: "Stuart Miller"
+date: "February 8, 2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(tswge)
+
+# read in data
+data1 <- read.csv('./daily-climate-time-series-data/DailyDelhiClimateTest.csv')
+data2 <- read.csv('./daily-climate-time-series-data/DailyDelhiClimateTrain.csv')
+data <- rbind(data2, data1)
+
+data['seq'] <- seq_along(data[, 'humidity'])
+```
+
+## Assignment 1
+
+Looking at your time series from the first day of class, you addressed its stationarity before. Does either a signal plus noise, ARIMA, or ARUMA (seasonal) model seem appropriate?
+
+Since the sample autocorrelations are slowly damped, it would expect that an ARIMA model would work.
+
+```{r}
+plotts.sample.wge(data$humidity)
+```
+
+## Assignment 2
+
+Copy and paste the factor table for a seasonal model with s = 7.
+
+```{r}
+factor.wge(c(rep(0,6),1))
+```
+
+
+## Assignemnt 3
+
+Idetify the type of model for the following models
+
+### Part A
+
+$$
+\left( 1 - B^4 \right)X_t = \left( 1 + 0.3 B\right) \left( 1 - 0.6B + 0.8 B^2 \right)
+$$
+
+This appears to be a seasonal (quarterly) model with an MA(3) noise component.
+
+```{r}
+# generate a series from this model
+theta <- mult.wge(c(-0.3), c(0.6, -0.8))
+x <- gen.aruma.wge(n = 200, theta = theta$model.coef, s = 4, plot = F)
+# remove the seasonal component
+x_diff <- artrans.wge(x, phi.tr = c(0,0,0,1))
+
+# plot both series
+plotts.sample.wge(x)
+plotts.sample.wge(x_diff)
+
+# fit models to the noise
+aic5.wge(x_diff)
+```
+
+```{r}
+factor.wge(c(0,0,0,1))
+```
+
+
+### Part B
+
+$$
+(1+.3B) X_t = \left(1-.6B+.8B^2\right) a_t
+$$
+
+This is an ARMA(1,2) model
+
+```{r}
+# generate a series from this model
+theta <- mult.wge(c(-0.3), c(0.6, -0.8))
+x <- gen.aruma.wge(n = 200, phi = c(-0.3), theta = c(0.6, -0.8), plot = F)
+
+# plot series
+plotts.sample.wge(x)
+# fit models to the noise
+aic5.wge(x)
+```
+
+```{r}
+factor.wge(c(0.6, -0.8))
+factor.wge(c(-0.3))
+```
+
+
+### Part C
+
+$$
+\left(1-.1B-.99B^2 +.013B^3 +.2078B^4 +.0888B^5 +.00864B^6\right)(1-B)^2 \left(1-B^{12} \right) X_t = (1-.6B+.8B^2) a_t
+$$
+
+This is a full ARUMA model with difference order of 1 and monly seasonality.
+The noise structure is ARMA(6,2)
+
+```{r}
+# generate a series from this model
+x <- gen.arima.wge(n = 200, 
+                   phi = c(.1,.99,-.013,-.2078,-.0888,-.00864), 
+                   theta = c(0.6, -0.8),
+                   d = 2,
+                   s = 12,
+                   plot = F)
+# remove the seasonal component
+x_diff <- artrans.wge(x, phi.tr = c(seq(0,11),1))
+x_diff <- artrans.wge(artrans.wge(x_diff, phi.tr = 1), phi.tr = 1)
+
+# plot both series
+plotts.sample.wge(x)
+plotts.sample.wge(x_diff)
+
+# fit models to the noise
+aic5.wge(x_diff,  p = 0:8, q = 0:5)
+```
+
+
+## Assignment 4
+
+Pick a stock and download the last year's worth of daily stock price data.
+
+* Plot the data. 
+* Take the first difference, and then estimate the structure of differenced data.  
+* From this information, suggest a model for the data. 
+
+```{r}
+# load in stock data
+stock <- read_csv('./TXN.csv')
+```
+
+```{r}
+# plot the data
+plotts.sample.wge(stock$Close)
+```
+
+```{r}
+# take the first difference
+x <- artrans.wge(stock$Close, phi.tr = 1)
+aic5.wge(x)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
