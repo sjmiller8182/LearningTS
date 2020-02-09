@@ -1,0 +1,172 @@
+---
+title: "ARIMA and ARUMA Models"
+author: "Stuart Miller"
+date: "February 8, 2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tswge)
+```
+
+# Signal + Noise Generation
+
+## Linear Signals
+
+```{r}
+n = 100
+
+# generate linear signals + noise
+gen.sigplusnoise.wge(n, b0 = 2, b1 = 4, vara = 100)
+# this one is just noise
+gen.sigplusnoise.wge(n, b0 = 0, b1 = 0, vara = 10)
+# this is a linear signal with an AR(1)
+gen.sigplusnoise.wge(n, b0 = 0, b1 = 0, phi = 0.975, vara = 10)
+```
+
+## Periodic Signal
+
+$$
+X_t = 5 cos (2 \pi (0.1) t + 2.5) +Z_t | Z_t ~ AR(1)
+$$
+
+```{r}
+gen.sigplusnoise.wge(n, coef = c(5,0), freq = c(0.1,0), psi = c(0.25,0), phi = 0.975, vara = 4)
+```
+
+## AR(4) Model
+
+$$
+\left( 1 - 0.975B \right) \left( 1-0.2B + 0.45B^2 \right) \left( 1 + 0.53 \right) X_t = a_t
+$$
+
+
+```{r}
+params = mult.wge(c(0.975), c(0.2,-0.45), c(-0.53))
+params$model.coef
+gen.arma.wge(n = 160, phi = params$model.coef, vara = 1)
+```
+
+
+## ARIMA(0,1,0)
+
+Realization is strickly wandering with root at 1.
+
+```{r}
+x = gen.arima.wge(200, phi = 0, var = 1, d = 1, sn  = 31)
+```
+
+Sample autocorrelations are slowly damped
+
+```{r}
+acf(x)
+```
+
+
+# Differencing Data
+
+The following command can be used to make differences in data
+
+```{r}
+# let x be a series
+x = c(1,3,6,10,25)
+# compute the first difference y
+y <- artrans.wge(x, phi.tr = 1)
+```
+
+# ARIMA Analysis
+
+Get a factor table of a model in factored form
+
+```{r}
+phi = mult.wge(c(0.6,-0.8),c(1), c(1))
+factor.wge(phi$model.coef)
+```
+
+```{r}
+x = gen.arima.wge(n = 500, phi = c(0.6, -0.8), d = 2, theta = -0.3, sn = 35)
+plotts.sample.wge(x)
+```
+
+
+```{r}
+y = artrans.wge(artrans.wge(x, phi.tr = 1), phi.tr = 1)
+aic5.wge(y)
+```
+
+
+```{r}
+parzen.wge(y)
+```
+
+
+# Generating ARUMA and Seasonal Data
+
+Generate data for the following seasonal model.
+
+$$
+\left( 1 - B^4 \right) X_t = a_t
+$$
+
+
+```{r}
+x1 = gen.aruma.wge(n = 80, s = 4, sn = 6)
+plotts.sample.wge(x1)
+```
+
+
+Generate data for s4 with ARMA(2,1)
+
+```{r}
+x2 = gen.aruma.wge(n = 80, phi = c(1, -0.6), s = 4, theta = -0.5, sn = 6)
+plotts.sample.wge(x2)
+```
+
+```{r}
+factor.wge(c(1,-0.6))
+factor.wge(-0.5)
+```
+
+
+## Stationarize ARUMA
+
+Generate data from the following model,
+then remove the seasonal component to stationarize the data.
+
+$$
+\left( 1 - 0.6 B + 0.8 B^2 \right) \left( 1 -B^12 \right) X_t = \left(1 -0.3 B + 0.7 B^2 \right) a_t
+$$
+
+```{r}
+# generate the data
+x = gen.aruma.wge(n = 500, phi = c(0.6, -0.8), theta = c(0.3, -0.7), s = 12, sn = 37)
+x = artrans.wge(x, phi.tr = c(rep(0,11),1))
+plotts.sample.wge(x)
+aic5.wge(x)
+```
+
+
+## Factoring Seasonal Models
+
+Check for sim
+
+```{r}
+factor.wge(c(-0.3, 1.2, 0.4, 0, 0.5, rep(0,6), -1, 0.3, -1.2, -0.4))
+```
+
+```{r}
+factor.wge(c(rep(0,11),1))
+```
+
+
+
+
+
+
+
+
+
+
+
+
