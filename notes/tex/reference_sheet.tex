@@ -233,6 +233,31 @@
 
 \newpage
 
+	\section{ARIMA}
+		\subsection{General Form}
+			\begin{align*}
+			\phi \left( B \right) \left( 1 - B \right)^d X_t = \theta \left( B \right) a_t
+			\end{align*}
+			
+		\subsection{Properties}
+			\begin{itemize}
+				\item The roots on the unit circle dominate the behavior of the realization
+				\item The autocorrelations are defined to have a magnitude of 1  ($\rho_k = 1$)
+				\item The variance of ARIMA is not well defined
+			\end{itemize}
+
+	\section{ARUMA}
+	
+	ARUMA is an generalization of ARIMA that includes a term or term(s) for seasonality.
+	
+		\begin{align*}
+		\phi \left( B \right) \left( 1 - B \right)^d \left( 1- B^s \right) X_t = \theta \left( B \right) a_t
+		\end{align*}
+		
+		\subsection{Monthly Seasonality}
+		\begin{align*}
+		\left( 1 - B^4 \right) = (1-B) (1+ B) \left( 1 + B^2 \right)
+		\end{align*}
 	\section{General Linear Processes}
 	
 		\subsection{General Form}
