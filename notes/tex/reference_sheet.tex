@@ -258,6 +258,7 @@
 		\begin{align*}
 		\left( 1 - B^4 \right) = (1-B) (1+ B) \left( 1 + B^2 \right)
 		\end{align*}
+		
 	\section{General Linear Processes}
 	
 		\subsection{General Form}
@@ -280,6 +281,69 @@
 			\psi_0 = 1
 			\end{align*}
 	
+	\section{Forecasting}
+	
+		\subsection{Notation}
+			\begin{itemize}
+				\item $t_0$ - origin of the forecast
+				\item $l$ - number of time units to forecast (lead time)
+				\item $\hat{X}_{t_0} \left( l \right)$ - the forecast of 
+				$X_{t_0 + l}$ given data up to $t_0$
+			\end{itemize}
+	
+		\subsection{ARMA Forecasting}
+		Use \texttt{fore.arma.wge()} for forecasting.
+			\begin{align*}
+			\hat{X}_{t_0} \left( {l} \right) = 
+			\sum_{i=1}^p \phi_i \hat{X}_{t_0} \left( l - i \right) - 
+			\sum_{j=1}^q \theta_j \hat{a}_{t_0 + l - j} + 
+			\bar{x} \left[ 1 - \sum_{i = 1}^p \phi_i \right]
+			\end{align*}
+			
+			\subsubsection{Facts}
+				\begin{align*}
+				e_{t_0} \left( l \right) = X_{t_0 + l} - \hat{X}_{t_0} \left( l \right) \\
+				var \left[e_{t_0} \left( l \right)\right] = 
+				\sigma^2_a \sum_{j=0}^{l-1} \psi_j^2 \\
+				CI: \hat{X}_{t_0} \left( {l} \right) \pm z_{1-\alpha/2} \sigma_a 
+				\left[ \sum_{k=0}^{l-1} \psi_k^2 \right]^{1/2}
+				\end{align*}
+	
+		\subsection{ARIMA Forecasting}
+		Use \texttt{fore.aruma.wge()} for forecasting.
+			\begin{itemize}
+				\item Limits become unbounded as l increases
+				\item A factor of $(1-B)$ does not forecast a trend.
+				An order of $d > 1$ is required to forecast a trend.
+			\end{itemize}
+	
+		\subsection{ARIMA with Seasonality Forecasting}
+			The forecast for step $l$ is same as the last $s$ value.
+			Use \texttt{fore.aruma.wge()} for forecasting.
+			\begin{itemize}
+				\item Limits become unbounded as l increases
+				\item A factor of $(1-B)$ does not forecast a trend.
+				An order of $d > 1$ is required to forecast a trend.
+				\item $ \left(1-B\right) \left(1-B^s\right) = a_t $ is called an airline model.
+			\end{itemize}
+		
+		\subsection{Linear Forecasting}
+			Use \texttt{fore.sigplusnoise.wge()} for forecasting.
+			\begin{itemize}
+				\item Fit an OLS to $X_t$
+				\item Fit an AR(p) to the residuals ($Z_t$)
+			\end{itemize}
+		
+			$$
+			\hat{X}_{t_0} \left( {l} \right) =
+			b_0 + b_1 t + \hat{Z}_{t_0} \left( {l} \right)
+			$$
+		
+			$$
+			CI: b_0 + b_1 t + \hat{Z}_{t_0} \left( {l} \right) \pm 
+			z_{1-\alpha/2} \hat{\sigma}_a \left[ \sum_{k=0}^{l-1} \psi_k^2 \right]^{1/2}
+			$$
+		
 	\section{Filtering}
 	
 		Filters transform time series.
