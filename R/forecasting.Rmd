@@ -1,0 +1,246 @@
+---
+title: "forecasting"
+author: "Stuart Miller"
+date: "February 11, 2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tswge)
+```
+
+## AR Forecasting
+
+### AR(1) Example
+
+```{r}
+data("fig6.1nf")
+plotts.wge(fig6.1nf)
+```
+
+```{r}
+fore.arma.wge(fig6.1nf, phi = 0.8, n.ahead = 20, plot = T, limits = F)
+```
+
+### AR(2) Example
+
+```{r}
+x2 <- gen.arma.wge(n = 75, phi = c(1.6, -0.8), sn = 24)
+x2 <- x2 + 25
+fore.arma.wge(x2, phi = c(1.6, -0.8), n.ahead = 50)
+```
+
+
+## ARMA Forecasting
+
+AR(2,1) example.
+
+```{r}
+x1 <- gen.arma.wge(n = 75, phi = c(1.6, -0.8), theta = -0.9, sn = 24)
+fore.arma.wge(x1, phi = c(1.6, -0.8), theta = -0.9, n.ahead = 20)
+```
+
+
+
+
+
+## Checking Forecasts
+
+Forecast on the Lynx data and calculate MSE.
+
+```{r}
+data("llynx")
+plotts.wge(llynx)
+l_AR4 = fore.arma.wge(llynx, phi = c(1.3, -0.7, 0.1, -0.2),
+                      n.ahead = 30, limits = F, lastn = T)
+MSE= mean((l_AR4$f - llynx[85:114])^2)
+MSE
+
+```
+
+
+```{r}
+swd <- read.csv('./swadelay.csv')
+
+AR12 <- fore.arma.wge(swd$arr_delay, 
+                      phi = c(0.44, 0.02, -0.12, 0.08, 0, 0.02,
+                              0.06, -0.09, 0.06, 0.07, 0.02, 0.37),
+                     n.ahead = 30, lastn = T, limits = F)
+
+AR12.mse = mean((AR12$f - swd$arr_delay[148:177])^2)
+
+print(AR12.mse)
+
+ARMA12 <- fore.arma.wge(swd$arr_delay,
+                        phi = c(0.34, 0.07, -0.11, 0.07, 0.01,
+                                0.02, 0.06, -0.09, 0.05, 0.07,
+                                0.02, 0.39), 
+                        theta = -0.12,
+                        n.ahead = 30, lastn = T, limits = F)
+
+ARMA12.mse = mean((ARMA12$f - swd$arr_delay[148:177])^2)
+
+print(ARMA12.mse)
+```
+
+
+## ARIMA Forecasting
+
+Forecasting on an ARIMA(0,1,0)
+
+$$
+(1-B) \left( X_t - \mu \right) = a_t
+$$
+
+```{r}
+xd = gen.aruma.wge(n = 75, d = 1, sn = 74)
+fore.aruma.wge(xd, d = 1, n.ahead = 5, limits = F)
+```
+
+### Other Forecast Examples
+
+```{r}
+xd = gen.aruma.wge(n = 50, phi = 0.8, d = 1, sn = 15)
+fore.aruma.wge(xd, d = 1, n.ahead = 5, limits = F)
+```
+
+```{r}
+fore.aruma.wge(xd, phi = 0.8, d = 1, n.ahead = 5, limits = F)
+```
+
+
+```{r}
+fore.aruma.wge(xd, d = 2, n.ahead = 5, limits = F)
+```
+
+## ARIMA with Seasonality Forecasting
+
+Forecast from the following model
+
+$$
+\left( 1- B^4 \right) X_t = a_t
+$$
+
+```{r}
+x = gen.aruma.wge(n = 20, s = 4, sn = 6)
+fore.aruma.wge(x, s = 4, n.ahead = 8, lastn = F, plot = T)
+```
+
+```{r}
+x = gen.aruma.wge(n = 20, s = 4, sn = 6)
+fore.aruma.wge(x, s = 4, n.ahead = 8, lastn = T, plot = T)
+```
+
+### Forecasting on the Airline Data
+
+```{r}
+data("airlog")
+f = fore.aruma.wge(airlog, phi = c(-0.36, -0.05, -0.14, -0.11, 0.04,
+                               0.09, -0.02, 0.02, 0.17, 0.03,
+                               -0.1, -0.38),
+               d= 1, s = 12,
+               n.ahead = 36,
+               lastn = T)
+
+mean((f$f - airlog[(144-35):144])^2)
+```
+
+
+## Signal + Noise Forecasting
+
+Generate a linear signal with an AR(2) noise structure
+
+```{r}
+x <- gen.sigplusnoise.wge(n = 50, b0 = 10, b1 = 0.2, phi = c(0.8, -0.6))
+```
+
+
+```{r}
+fore.sigplusnoise.wge(x, n.ahead = 20)
+```
+
+
+
+
+### Amazon Prediction
+
+```{r}
+amazon <- read.csv('./AMZN.csv')
+```
+
+
+```{r}
+f <- fore.sigplusnoise.wge(amazon$Adj.Close, n.ahead = 30)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
