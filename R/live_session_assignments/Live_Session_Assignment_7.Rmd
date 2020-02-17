@@ -1,0 +1,188 @@
+---
+title: "Untitled"
+author: "Stuart Miller"
+date: "February 15, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(tswge)
+
+# read in data
+data1 <- read.csv('./daily-climate-time-series-data/DailyDelhiClimateTest.csv')
+data2 <- read.csv('./daily-climate-time-series-data/DailyDelhiClimateTrain.csv')
+data <- rbind(data2, data1)
+
+data['seq'] <- seq_along(data[, 'humidity'])
+```
+
+## Assignment 1
+
+Which model do you think is appropriate to use to forecast your time series? Why?
+
+```{r}
+plotts.sample.wge(data$humidity)
+```
+
+Looking at the parzen window with additional truncation points to see where most of the low frequency is positioned.
+
+According to the parzen window, the maximum value of the spectral density (19) occurs at 0.005, which maps to a period of 200 days.
+However, this period appears to be too small based on visual inspection of the realization.
+Approximately, 375 days appears to be a better estimate of the period.
+The spectral magnitude of the frequeny with period of 375 days is approximately 17, which is close to the maximum value of the spectral density.
+
+```{r}
+parzen.values <- plotts.parzen.wge(data$humidity, m2 = c(500, 1000))
+print('max value of the parzen window occurs at freq')
+parzen.values$freq[which.max(parzen.values$dbz2)]
+print('the spectral magnitude at a period of 375 is')
+parzen.values$dbz2[5]
+```
+
+I will use the seasonal model suggested by the simple frequency analysis and the model I chose based on visual inspection.
+Based on validation, the model I would chose the model with s = 375.
+
+```{r}
+mse <- function(y.true, y.pred){
+  mean( (y.true - y.pred)^2 )
+}
+
+fcast.375 <- fore.aruma.wge(data$humidity, s = 375, n.ahead = 750, lastn = T)
+fcast.200 <- fore.aruma.wge(data$humidity, s = 200, n.ahead = 750, lastn = T)
+
+test.set <- data$humidity[(length(data$humidity) - 750 + 1):length(data$humidity)]
+
+mse(test.set, fcast.375$f)
+mse(test.set, fcast.200$f)
+```
+
+The image below shows the forward forcase for 1000 time steps.
+
+```{r}
+fcast <- fore.aruma.wge(data$humidity, s = 375, n.ahead = 1000)
+plot(fcast$f)
+```
+
+I removed the seasonality of s= 375 and checked to see if the resulting noise could be fit to an ARMA model.
+Based on the r esults of `aic5`, the noise could be fit to an ARMA model.
+
+```{r}
+diffed.data <- artrans.wge(data$humidity, phi.tr = c(rep(0,374),1))
+aic5.wge(diffed.data)
+```
+
+
+
+## Assignment 2
+
+Find the first 5 psi weights for the model below, and use them to find the half-width of the 95 percentile probability interval for the third forecast $(\hat{X}(3))$.  Please show your work as well as a plot of the series and the first eight forecasts with probability intervals.
+
+$$
+(1–0.9B)(1–0.8B)X_t = a_t
+$$
+
+**Realization**
+
+$X_1$ = 5, $X_2$ = 8, $X_3$ = 9, $X_4$ = 8,
+$X_5$ = 7, $X_6$ = 6, $X_7$ = 4, $X_8$ = 3
+
+
+```{r}
+mult.wge(c(0.9), c(0.8))
+```
+
+```{r}
+# first the first 5 weights (l = 6)
+weights <- psi.weights.wge(c(0.9, 0.8), lag.max = 5)
+# calculate the sum of the squared weights
+sum(c(1,weights)^2)
+```
+
+
+## Assignment 3
+
+```{r}
+mse <- function(y.true, y.pred){
+  mean( (y.true - y.pred)^2 )
+}
+
+# load the data
+data <- read.csv('./AmtrakPassengersMonthly.csv')
+
+test.set <- data$Ridership[(159-11):159]
+
+# model 1
+m1.phi = c(0.5511, 0.1680, -0.0145, 0.0651, 0.1388,
+           -0.2966, 0.1539, 0.1270, -0.1815, 0.0364,
+           0.1456, 0.6287, -0.3832, -0.0199, -0.1679) 
+
+m1.fcast <- fore.arma.wge(data$Ridership, phi = m1.phi, n.ahead = 12, lastn = T)
+
+m1.mse <- mse(m1.fcast$f, test.set)
+
+print('The MSE for model 1 is')
+print(m1.mse)
+
+# model 2
+m2.phi = c(-0.02709541,  0.74213105)
+m2.theta = c(-0.5844596,  0.3836931)
+
+m2.fcast <- fore.arma.wge(data$Ridership,
+                          phi = m2.phi,
+                          theta = m2.theta,
+                          n.ahead = 12,
+                          lastn = T)
+
+m2.mse <- mse(m3.fcast$f, test.set)
+
+print('The MSE for model 2 is')
+print(m2.mse)
+
+# model 3
+m3.phi = 0.306943
+m3.theta = 0.7431719
+
+m3.fcast <- fore.arma.wge(data$Ridership,
+                          phi = m3.phi,
+                          theta = m3.theta,
+                          n.ahead = 12,
+                          lastn = T)
+
+m3.mse <- mse(m2.fcast$f, test.set)
+
+print('The MSE for model 3 is')
+print(m3.mse)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
