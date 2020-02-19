@@ -300,12 +300,16 @@
 			\bar{x} \left[ 1 - \sum_{i = 1}^p \phi_i \right]
 			\end{align*}
 			
+			\begin{align*}
+			\hat{\sigma}^2_a = \frac{1}{n-p} \sum_{t=p+1}^{n} \hat{a}^2_t
+			\end{align*}
+			
 			\subsubsection{Facts}
 				\begin{align*}
 				e_{t_0} \left( l \right) = X_{t_0 + l} - \hat{X}_{t_0} \left( l \right) \\
 				var \left[e_{t_0} \left( l \right)\right] = 
 				\sigma^2_a \sum_{j=0}^{l-1} \psi_j^2 \\
-				CI: \hat{X}_{t_0} \left( {l} \right) \pm z_{1-\alpha/2} \sigma_a 
+				FI: \hat{X}_{t_0} \left( {l} \right) \pm z_{1-\alpha/2} \sigma_a 
 				\left[ \sum_{k=0}^{l-1} \psi_k^2 \right]^{1/2}
 				\end{align*}
 	
@@ -340,7 +344,7 @@
 			$$
 		
 			$$
-			CI: b_0 + b_1 t + \hat{Z}_{t_0} \left( {l} \right) \pm 
+			FI: b_0 + b_1 t + \hat{Z}_{t_0} \left( {l} \right) \pm 
 			z_{1-\alpha/2} \hat{\sigma}_a \left[ \sum_{k=0}^{l-1} \psi_k^2 \right]^{1/2}
 			$$
 		
