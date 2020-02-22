@@ -84,7 +84,12 @@
 		\gamma_0 = \frac{1}{N} \sum_{t=1}^{N} (x_t - \bar{x})^2 \\
 		\gamma_k = \frac{1}{N} \sum_{t=1}^{N-k} (x_t - \bar{x}) (x_{t+k} - \bar{x}) \\
 		\rho_0 = 1 \\
-		\rho_k = \frac{\gamma_k}{\gamma_0}
+		\rho_k = \frac{\gamma_k}{\gamma_0} \\
+		\hat{\sigma}_X^2 = \frac{\hat{\sigma}^2}{n} \left( 1 + 2 
+			\sum_{k=1}^{n-1} \left( 1 - \frac{|k|}{n} \hat{\rho_k} \right) \right) \\
+		CI: \bar{X} \pm 1.96 \sqrt{\frac{\hat{\sigma}^2}{n} 
+			\left( 1 + 2 
+			\sum_{k=1}^{n-1} \left( 1 - \frac{|k|}{n} \hat{\rho_k} \right) \right)}
 		\end{align*}
 		
 		\section{Autoregressive Models}
