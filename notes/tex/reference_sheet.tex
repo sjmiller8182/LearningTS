@@ -90,17 +90,20 @@
 		\section{Autoregressive Models}
 		
 		\subsection{AR(1) Models}
-		\begin{align*}
-		X_t- \phi X_{t-1} = a_t \\
-		(1 - \phi z) = 0
-		\end{align*}
+			\begin{align*}
+			X_t- \phi X_{t-1} = a_t \\
+			(1 - \phi z) = 0 \\
+			\rho_0 = 1 \\
+			\rho_k = \theta_1^k \\
+			\sigma_X^2 = \frac{\sigma_a^2}{1 - \theta_1^2}
+			\end{align*}
 		
 		\subsection{AR(1) Properties}
 		\begin{itemize}
 			\item Positive $\phi$
 			\begin{itemize}
 				\item Realizations appear to be wandering (aperiodic)
-				\item Autocorrelations are damped exponentials.
+				\item Autocorrelations are damped exponentials
 				\item Spectral densities have peaks at zero
 			\end{itemize}
 			\item Negative $\phi$
@@ -112,10 +115,14 @@
 		\end{itemize}
 		
 		\subsection{AR(2) Models}
-		\begin{align*}
-		X_t - \phi_1 X_{t-1} - \phi_2 X_{t-2} = a_t \\
-		(1 - \phi_1 z - \phi_2 z^2) = 0
-		\end{align*}
+			\begin{align*}
+			X_t - \phi_1 X_{t-1} - \phi_2 X_{t-2} = a_t \\
+			(1 - \phi_1 z - \phi_2 z^2) = 0 \\
+			\rho_0 = 1 \\
+			\rho_1 = \frac{\theta_1}{1 - \theta_2} \\
+			\rho_2 = \frac{\theta_1^2 + \theta_2 - \theta_2^2}{1 - \theta_2} \\
+			\sigma_X^2 = \frac{1}{1 - \theta_1\rho_1 - \theta_2\rho_2}
+			\end{align*}
 		
 		\subsection{AR(2) Properties}
 		\begin{itemize}
@@ -189,7 +196,8 @@
 		(1 - \theta_1 z) = 0 \\
 		\rho_0 = 0 \\
 		\rho_1 = \frac{-\theta_1}{1 + \theta_1^2} \\
-		\rho_k = 0 |_{k>1}
+		\rho_k = 0 |_{k>1} \\
+		\sigma_X^2 = \sigma_a^2 \left( 1 + \theta_1^2 \right)
 		\end{align*}
 		
 		\subsection{MA(2) Models}
@@ -198,7 +206,8 @@
 		(1 - \theta_1 z - \theta_2 z^2) = 0 \\
 		\rho_0 = 0 \\
 		\rho_1 = \frac{-\theta_1 + \theta_1 \theta_2}{1 + \theta_1^2 + \theta_2^2} \\
-		\rho_k = 0 |_{k>2}
+		\rho_k = 0 |_{k>2} \\
+		\sigma_X^2 = \sigma_a^2 \left( 1 + \theta_1^2 + \theta_2^2 \right)
 		\end{align*}
 		
 		\subsection{MA(q) Models}
@@ -213,6 +222,13 @@
 				\item MA models are always stationary
 				\item MA models are invertable iff all the roots are outside of the unit circle.
 			\end{itemize}
+	
+		\subsection{MA Inversion}
+		\begin{itemize}
+			\item Real Root: use $1 / \theta$
+			\item Complex Roots: use $\theta_1 = r_1^{-1} + r_2^{-1}$ and 
+			$\theta_2 = -r_1^{-1} r_2^{-1}$
+		\end{itemize}
 	
 	\section{ARMA(p,q) Models}
 	
@@ -230,8 +246,6 @@
 			\end{itemize}
 			\item $\phi (z)$ and $\theta (z)$ have no common factors (check)
 		\end{itemize}
-
-\newpage
 
 	\section{ARIMA}
 		\subsection{General Form}
