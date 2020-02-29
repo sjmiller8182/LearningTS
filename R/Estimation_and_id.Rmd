@@ -10,8 +10,11 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tswge)
 ```
 
-# Maximum Likelihood Estimation
+# Model Estimation
 
+
+
+## Maximum Likelihood Estimation
 
 ```{r}
 x <- gen.arma.wge(n = 200,
@@ -21,6 +24,8 @@ x <- gen.arma.wge(n = 200,
                   sn = 27)
 est.arma.wge(x,2,1)
 ```
+
+## Burg Estimation
 
 ```{r}
 x <- gen.arma.wge(n = 200,
@@ -32,17 +37,134 @@ est.ar.wge(x,2,1, type = 'burg')
 
 # Model Identification
 
-## Check for White Noise
+## Step 1 -  Check for White Noise
+
+The following appears to be white noise based on the realization and autocorrelations.
 
 ```{r}
 mwn <- read.csv('./maybewhitenoise1.csv')$x
 plotts.sample.wge(mwn)
 ```
 
+The following appears to have autocorrelations consistent with white noise,
+but the realization does not appear to be consistent with white nouse.
+
 ```{r}
 mwn <- read.csv('./maybewhitenoise2.csv')$x
 plotts.sample.wge(mwn)
 ```
+
+## Step 2 - Select p, q
+
+This can be done with AIC or a similar criterion.
+
+$$
+AIC = ln \left( \hat{\sigma}^2 \right) + 2 \left( \frac{  p + q + 1  }{n} \right)
+$$
+
+* BIC imposes a stronger penalty for adding model parameters than AIC
+* AICc is a middle groud between AIC and BIC
+
+```{r}
+inflation <- read.csv('./inflation.csv')
+aic5.wge(inflation$Inflation, type = 'bic')
+```
+
+
+# PACF
+
+```{r}
+data <- read.csv('./armawhatpq1.csv')$x
+acf(data)
+```
+
+
+```{r}
+aic5.wge(data)
+aic5.wge(data, type = 'bic')
+```
+
+
+```{r}
+pacf(inflation$Inflation)
+```
+
+
+
+# Putting it all together
+
+## Example 1
+
+Plots show that this does not look like a white noise process.
+
+```{r}
+data <- read.csv('./putittogether.csv')$x
+plotts.sample.wge(data)
+```
+
+The best fit for this is an ARMA(p, q) based on AIC.
+
+```{r}
+aic5.wge(data)
+```
+
+Get the model parameter estimates.
+
+```{r}
+est.arma.wge(data, p = 2, q = 2)
+```
+
+
+
+## Example 2
+
+Plots show that this does not look like a white noise process.
+
+```{r}
+data <- read.csv('./texasgasprice.csv')$Price
+plotts.sample.wge(data)
+```
+
+The best fit for this is an ARMA(p, q) based on AIC.
+
+```{r}
+aic5.wge(data)
+```
+
+Get the model parameter estimates.
+
+```{r}
+est <- est.arma.wge(data, p = 2)
+```
+
+```{r}
+fore.arma.wge(data, phi = est$phi, n.ahead = 8)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
