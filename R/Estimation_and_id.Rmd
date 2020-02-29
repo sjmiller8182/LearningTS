@@ -1,0 +1,48 @@
+---
+title: "Parameter_Estimation"
+author: "Stuart Miller"
+date: "2/29/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tswge)
+```
+
+# Maximum Likelihood Estimation
+
+
+```{r}
+x <- gen.arma.wge(n = 200,
+                  phi = c(0.3, -0.7), 
+                  theta = -0.4,
+                  vara = 4,
+                  sn = 27)
+est.arma.wge(x,2,1)
+```
+
+```{r}
+x <- gen.arma.wge(n = 200,
+                  phi = c(0.3, -0.7), 
+                  vara = 4,
+                  sn = 27)
+est.ar.wge(x,2,1, type = 'burg')
+```
+
+# Model Identification
+
+## Check for White Noise
+
+```{r}
+mwn <- read.csv('./maybewhitenoise1.csv')$x
+plotts.sample.wge(mwn)
+```
+
+```{r}
+mwn <- read.csv('./maybewhitenoise2.csv')$x
+plotts.sample.wge(mwn)
+```
+
+
+
