@@ -27,8 +27,8 @@ Note files are expected to be viewed in the given order.
 
 ## Repo Structure
     .
-    ├── notes       # Notes on time series analysis
-    ├── R           # Code files that accompany the notes (as Rmd and github-md)
+    ├── notes       # Notes on time series analysis.
+    ├── R           # Code files that accompany the notes.
     ├── LICENSE     # All code and notes are licensed under the MIT license.
     └── README.md
 
