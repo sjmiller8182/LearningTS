@@ -1,7 +1,3 @@
-# LearningTS
-
-This repo is based on Time Series (MSDS6373) at SMU.
-
 ## Notes
 
 ### Note Files
