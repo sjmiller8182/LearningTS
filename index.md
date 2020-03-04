@@ -4,17 +4,17 @@
 
 Note files are expected to be viewed in the given order.
 
-* [Glossary](./notes/glossary.ipynb)
-* [Prelimiaries](./notes/preliminaries.ipynb)
-* [Stationary Time Series](./notes/stationarity.ipynb)
-* [Frequency Analysis](./notes/frequency_domain.ipynb)
-* [Backshift Notation](./notes/backshift_operator.ipynb)
-* [Filtering](./notes/filtering.ipynb)
-* [Autoregressive Models (AR)](./notes/autoregressive_models.ipynb)
-* [Moving Average Models (MA)](./notes/moving_average_models.ipynb)
+* [Glossary](./notes/build/glossary.pdf)
+* [Prelimiaries](./notes/build/preliminaries.pdf)
+* [Stationary Time Series](./notes/build/stationarity.pdf)
+* [Frequency Analysis](./notes/build/frequency_domain.pdf)
+* [Backshift Notation](./notes/build/backshift_operator.pdf)
+* [Filtering](./notes/build/filtering.pdf)
+* [Autoregressive Models (AR)](./notes/build/autoregressive_models.pdf)
+* [Moving Average Models (MA)](./notes/build/moving_average_models.pdf)
 * [Autoregressive Moving Average Models (ARMA)](./notes/build/arma_models.pdf)
 * [Non-Stationary Models (ARIMA and ARUMA)](./notes/build/arima_aruma_models.pdf)
-* [Forecasting](./notes/forecasting.ipynb)
+* [Forecasting](./notes/build/forecasting.pdf)
 
 ### Reference Sheets
 
@@ -24,6 +24,8 @@ Note files are expected to be viewed in the given order.
 ## Repo Structure
     .
     ├── notes       # Notes on time series analysis.
+    | ├── tex       # Tex source files.
+    | └── build     # Build of the notes notebooks.
     ├── R           # Code files that accompany the notes.
     ├── LICENSE     # All code and notes are licensed under the MIT license.
     └── README.md
