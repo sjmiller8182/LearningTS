@@ -12,8 +12,8 @@ Note files are expected to be viewed in the given order.
 * [Filtering](./notes/filtering.ipynb)
 * [Autoregressive Models (AR)](./notes/autoregressive_models.ipynb)
 * [Moving Average Models (MA)](./notes/moving_average_models.ipynb)
-* [Autoregressive Moving Average Models (ARMA)](./notes/arma_models.ipynb)
-* [Non-Stationary Models (ARIMA and ARUMA)](./notes/arima_aruma_models.ipynb)
+* [Autoregressive Moving Average Models (ARMA)](./notes/build/arma_models.pdf)
+* [Non-Stationary Models (ARIMA and ARUMA)](./notes/build/arima_aruma_models.pdf)
 * [Forecasting](./notes/forecasting.ipynb)
 
 ### Reference Sheets
