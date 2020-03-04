@@ -16,6 +16,7 @@ Note files are expected to be viewed in the given order.
 * [Autoregressive Moving Average Models (ARMA)](./arma_models.ipynb)
 * [Non-Stationary Models (ARIMA and ARUMA)](./arima_aruma_models.ipynb)
 * [Forecasting](./forecasting.ipynb)
+* [Model Identification and Parameter Estimation](./model_id.ipynb)
 
 ## Reference Sheets
 
