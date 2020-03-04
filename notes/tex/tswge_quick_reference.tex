@@ -127,6 +127,53 @@
 				\end{itemize}
 		\end{itemize}
 		
+		\section{Forecast}
+		
+		\begin{itemize}
+			\item \texttt{fore.arma.wge} - forecast arma signals
+			\begin{itemize}
+				\item \texttt{x}: The series
+				\item \texttt{theta}: MA vector
+				\item \texttt{phi}: AR vector
+				\item \texttt{n.ahead}: Number of forecast steps
+				\item \texttt{lastn}: Use last \texttt{n.ahead} values to validate forecast
+			\end{itemize}
+			\item \texttt{fore.aruma.wge} - forecast aruma signals
+			\begin{itemize}
+				\item \texttt{x}: The series
+				\item \texttt{theta}: MA vector
+				\item \texttt{phi}: AR vector
+				\item \texttt{d}: Number of difference factors
+				\item \texttt{s}: Seasonality factor
+				\item \texttt{n.ahead}: Number of forecast steps
+				\item \texttt{lastn}: Use last \texttt{n.ahead} values to validate forecast
+			\end{itemize}
+		\end{itemize}
+
+		\section{Model Fitting}
+		
+		\begin{itemize}
+			\item \texttt{aic5.wge} - fit models for given orders and return top 5
+				\begin{itemize}
+					\item \texttt{x}: The series
+					\item \texttt{p}: Vector of orders
+					\item \texttt{q}: Vector of orders
+					\item \texttt{type}: Penalty \{ \texttt{'AIC'} (default), \texttt{'AICC'}, \texttt{'BIC'} \}
+				\end{itemize}
+			\item \texttt{est.ar.wge} - fit an AR model
+				\begin{itemize}
+					\item \texttt{x}: The series
+					\item \texttt{p}: AR model to fit
+					\item \texttt{type}: Fit method \{ \texttt{'mle'} (default), \texttt{'burg'}, \texttt{'yw'} \}
+				\end{itemize}
+			\item \texttt{est.arma.wge} - fit an AR model
+				\begin{itemize}
+					\item \texttt{x}: The series
+					\item \texttt{p}: AR order to fit
+					\item \texttt{q}: MA order to fit
+				\end{itemize}
+		\end{itemize}
+		
 		\section{Filtering}
 		
 		\begin{itemize}
