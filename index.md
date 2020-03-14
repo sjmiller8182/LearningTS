@@ -21,15 +21,6 @@ Note files are expected to be viewed in the given order.
 * [Reference Sheet](./notes/reference_sheet.pdf): Reference sheet for tests ([src](./notes/tex/reference_sheet.tex))
 * [`tswge` Quick Reference Sheet](./notes/tswge_quick_reference.pdf): Reference sheet for `tswge` an R package ([src](./notes/tex/tswge_quick_reference.tex))
 
-## Repo Structure
-    .
-    ├── notes       # Notes on time series analysis.
-    | ├── tex       # Tex source files.
-    | └── build     # Build of the notes notebooks.
-    ├── R           # Code files that accompany the notes.
-    ├── LICENSE     # All code and notes are licensed under the MIT license.
-    └── README.md
-
 ## Reference
 
 Code and notes are my own.
