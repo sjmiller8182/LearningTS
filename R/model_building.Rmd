@@ -52,7 +52,7 @@ aic5.wge(sunspot.classic, p = 0:10)
 plotts.sample.wge(sunspot.classic)
 ```
 
-
+## The Most Recent Sunspot Data
 
 ```{r}
 data <- read.csv('./SN_y_tot_V2.0.csv', sep = ';', header = F)
@@ -154,19 +154,87 @@ fore.aruma.wge(data$V2,
 ```
 
 
+## The Accuspike Webhits Data
+
+From the sample plots, the data appears to be consistent with an AR(3).
+There is a prominate frequency near 1.4 and a prominate frequency near 0.
+However, the frequency near 1.4 could be a weekly seasonal pattern since the data is taken daily.
+The realization appears to be stationary except for the last few points.
+
+```{r}
+data <- read.csv('./Accuspike.csv', header = T)
+realization <- data$Active.Users[1:180]
+plotts.sample.wge(realization)
+```
+
+```{r}
+end <- length(realization) -1
+shift <- end / 2
+
+acf(realization[ 1 : shift ])
+acf(realization[ shift : end])
+
+```
+
+
+Removing a seasonal component of s = 7 appears to reduce the autocorrelations.
+
+```{r}
+diff.s7 <- artrans.wge(realization, phi.tr = c(rep(0,6),1))
+
+end <- length(diff.s7) -1
+shift <- end / 2
+acf(diff.s7[ 1 : shift ])
+acf(diff.s7[ shift : (end)])
+```
+
+```{r}
+plotts.sample.wge(diff.s7)
+vals <- est.ar.wge(diff.s7, 24, type = 'burg')
+```
+
+
+```{r}
+aic5.wge(diff.s7, p = 0:10, q = 0:3)
+aic5.wge(diff.s7, p = 0:10, q = 0:3, type = 'bic')
+```
 
 
 
+```{r}
+est <- est.arma.wge(diff.s7, p = 8, q = 0)
+est$avar
+mean(realization)
+```
+
+$$
+\left(1 -0.36B +0.0002B^2 - 0.08B^3 - 0.071B^4 + 0.17B^5  + 0.0015B^6 + 0.45B^7 - 0.3275B^8 \right) 
+\left( 1-B^7 \right)
+\left(X_t - 83.85 \right)
+= a_t \,\,\,\, \sigma_a^2 = 303.77
+$$
 
 
+```{r}
+diff.s7.ar8 <- artrans.wge(diff.s7, phi.tr = est$phi)
+plotts.sample.wge(diff.s7.ar8)
+ljung.wge(diff.s7.ar8, p = 8, K = 24)
+```
 
 
+```{r}
+sim <- gen.aruma.wge(200, phi = est$phi, s = 7, theta = est$theta)
+parzen.wge(sim)
+```
 
 
-
-
-
-
+```{r}
+fore.aruma.wge(realization,
+               s = 7,
+               phi = est$phi,
+               n.ahead = 7*3,
+               lastn = F)
+```
 
 
 
