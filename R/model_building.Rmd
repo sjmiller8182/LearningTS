@@ -1,0 +1,209 @@
+---
+title: "Model_Building"
+author: "Stuart Miller"
+date: "March 12, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tswge)
+```
+
+# Model Building
+
+Example model
+
+$$
+(1 - 1.6 B + 0.9 B^2 ) (X_t-10) = (1 -0.8 B)a_t
+$$
+
+
+```{r}
+x = gen.arma.wge(n = 100, phi = c(1.6, -0.9), theta =0.8, sn = 67) + 10
+plotts.sample.wge(x)
+aic5.wge(x)
+x21 <- est.arma.wge(x, 2, 1)
+x21$phi
+x21$theta
+x21$avar
+mean(x)
+
+```
+
+
+$$
+(1 - 1.62 B + 0.91 B^2 ) (X_t-10.08) = (1 -0.87 B)a_t \,\,\,\, \sigma^2_a = 1.08
+$$
+
+Check whitened residuals
+
+```{r}
+plotts.sample.wge(x21$res)
+ljung.wge(x21$res,p=2,q=1)
+ljung.wge(x21$res,p=2,q=1, K = 48)
+```
+
+## Sunspot Data
+
+```{r}
+data("sunspot.classic")
+aic5.wge(sunspot.classic, p = 0:10)
+plotts.sample.wge(sunspot.classic)
+```
+
+
+
+```{r}
+data <- read.csv('./SN_y_tot_V2.0.csv', sep = ';', header = F)
+plotts.sample.wge(data$V2)
+```
+
+
+```{r}
+shift <- length(data$V2) / 2
+end <- length(data$V2)
+
+acf(data$V2[1 : shift])
+acf(data$V2[shift : end])
+```
+
+Used BIC becuase AIC tends to pick a model with a large number of parameters
+
+Selected model orders
+
+* p = 4
+* q = 4
+
+```{r}
+aic5.wge(data$V2, p = 0:15, q = 0:5, type = 'aic')
+aic5.wge(data$V2, p = 0:15, q = 0:5, type = 'bic')
+```
+
+```{r}
+model.arma <- est.arma.wge(data$V2, 9, 0)
+model.arma.f <- fore.arma.wge(data$V2,
+                              phi = model.arma$phi,
+                              theta = model.arma$theta,
+                              n.ahead = 15,
+                              lastn = T)
+ljung.wge(model.arma$res, p = 9, q = 0, K = 48)
+```
+
+```{r}
+artrans.wge(data$V2,
+            phi.tr = model.arma$phi)
+```
+
+
+```{r}
+start <- length(data$V2) - 15 + 1
+val.set <- data$V2[start : end]
+
+mean( ( model.arma.f$f - val.set )^2 )
+```
+
+```{r}
+model.arma <- est.arma.wge(data$V2, 24, 0)
+```
+
+
+```{r}
+factor.wge(c(rep(0,10),1))
+```
+
+
+
+```{r}
+diff.11 <- artrans.wge(data$V2, phi.tr = c(rep(0,10),1))
+aic5.wge(diff.10, p = 0:15, type = 'aic')
+aic5.wge(diff.10, p = 0:15, type = 'bic')
+```
+
+```{r}
+model.sarma <- est.arma.wge(diff.11, 13)
+model.sarma.f <- fore.aruma.wge(data$V2,
+                                 phi = model.sarma$phi,
+                                 theta = model.sarma$theta,
+                                 d = 0,
+                                 s = 10, 
+                                 lastn = T,
+                                 n.ahead = 15)
+
+plotts.sample.wge(model.sarma$res)
+
+ljung.wge(model.sarma$res, p = 13, K = 48)
+```
+
+
+
+```{r}
+mean( ( model.sarma.f$f - val.set )^2 )
+```
+
+
+
+```{r}
+fore.aruma.wge(data$V2,
+               phi = model.arma$phi,
+               theta = model.arma$theta,
+               d = 0,
+               s = 0, 
+               lastn = F,
+               n.ahead = 10)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

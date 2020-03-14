@@ -1,0 +1,313 @@
+---
+title: "Untitled"
+author: "Stuart Miller"
+date: "March 7, 2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tswge)
+library(tidyverse)
+library(tseries)
+data <- read_csv('./10_year_bond_rate_2010-2015.csv')
+```
+
+Plot the series and the ACF. 
+Then discuss your thoughts on the stationarity of the data.
+
+```{r}
+vals <- plotts.sample.wge(data$Close)
+```
+
+
+Difference the data using artrans.wge(). 
+Looking at the plots, are the differenced data consistent with white noise? 
+Is the ACF of the differenced data consistent with white noise?
+
+The differenced data look like white noise, and the ACF has very small autocorrelations that are mostly all inside the limit lines.
+
+```{r}
+vals <- artrans.wge(data$Close, phi.tr = 1)
+```
+
+Consider again the 10-year bond rate from the 2010–2015 data set (10 Year Bond Rate 2010-2015.csv).
+
+Use aic5.wge (and the AIC) to estimate the p and q of an ARMA model fit to the differenced data. Is p = 0, q = 0 in the top five?
+
+```{r}
+aic5.wge(vals)
+```
+
+Now let’s model the bond data as a stationary model. Use aic5.wge() on the original data (not differenced). What model does the AIC favor?
+
+An AR(1) is favored by AIC.
+
+```{r}
+aic5.wge(data$Close)
+```
+
+
+Use est.ar.wge and Burg estimates to fit an AR(6) and AR(8) to the bond-adjusted close prices, and verify that there is evidence of a (1-B) factor.
+
+Notice that the overfit table shows a root close to the unit circle.
+
+
+```{r}
+vals <- est.ar.wge(data$Close, p=6, type = 'burg')
+
+```
+
+
+
+Using Zero_One_Or_TwoRootsOfOne.csv, determine if there are zero, one, or two factors with roots of 1. Use the ACF and overfitting with factor tables.
+
+```{r}
+data <- read_csv('./zero_one_or_tworootsofone.csv')
+vals <- est.ar.wge(data$x, p=6, type = 'burg')
+```
+
+
+Run the following code:
+
+```r
+x = gen.arma.wge(200,phi = c(.9), sn = 5)
+adf.test(x)
+```
+
+```{r}
+x <- gen.arma.wge(200,phi = c(.9))
+adf.test(x)
+```
+
+Consider the attached Southwest Airlines flight delay data (SWADelay.csv). Use est.ar.wge() to overfit an AR(15) model with the Burg estimates. We are trying to gauge if there is sufficient evidence to suggest a (1-B12) factor is in the model. Look at the factor table, and answer the following questions.
+
+What is the root associated with the factor (from the factor table you generated) that would be matched with the (1-B) term from the (1-B12) factor table? Express your response rounded to four decimal places.
+
+1.0310
+
+Look at the system frequencies from the factor table you generated. What is the system frequency associated with the the factor (from the factor table you generated) that would be matched with the (1 – 1.732B + B2) factor from the (1-B12) factor table? Express your response rounded to four decimal places.
+
+0.0848
+
+Do you feel that there is enough evidence to suggest a (1-B12) factor should be present in our final model?
+
+This is subjective, but there is only one term that doesn’t match up almost exactly (the (1 + B + B2)) B. No. We will take this answer, but you would almost have some domain knowledge or other evidence to not include a (1-B12) in this case. Note: The spectral density shows a clear peak at 1/12 = .08, but this does not in and of itself mean that (1-B12) is appropriate. There are many other factors of smaller degree that will yield this frequency.
+
+```{r}
+data <- read_csv('./swadelay.csv')
+vals <- est.ar.wge(data$arr_delay, p = 15, type = 'burg')
+```
+
+Step 1: Using the log of the airline data (the same as for the previous example), take the first differences, and record them in a variable called d1, just like was done in the previous example.
+
+Step 2: Transform the differenced data with the "seasonal" difference (1-B12), and record them in a variable called d1.12,  just like was done in the previous example.
+
+Step 3: Now estimate the coefficients of the AR(12) fit to the twice differenced data (d1.12) (using the Burg estimates).
+
+
+
+```{r}
+plotts.sample.wge(log(data$arr_delay))
+
+d1 <- artrans.wge(log(data$arr_delay), phi.tr = 1)
+
+d1.12 <- artrans.wge(d1, phi.tr = c(rep(0,11),1))
+
+est <- est.ar.wge(d1.12, p = 12, type = 'burg')
+
+psi.weights.wge(est$phi, lag.max = 5)
+```
+
+
+
+
+## Linear Models
+
+```{r}
+x = gen.sigplusnoise.wge(100, b0 = 0, b1= 0, phi= .95)
+
+t = seq_along(x)
+df = data.frame(x = x, t= t)
+fit = lm(x~t, data = df)
+summary(fit)
+
+```
+
+
+## Trend—Cochrane-Orcutt
+
+```{r}
+library(orcutt)
+x <- gen.sigplusnoise.wge(100, b0 = 0, b1 = 0, phi = 0.95, sn = 21)
+t <- seq_along(x)
+df = data.frame(x = x, t = t)
+fit = lm(x~t, data = df)
+summary(fit)
+```
+
+
+```{r}
+cfit <- cochrane.orcutt(fit)
+summary(cfit)
+```
+
+
+```{r}
+t <- seq_along(data$arr_delay)
+fit <- lm(data$arr_delay ~ t)
+summary(fit)
+```
+
+
+```{r}
+cfit <- cochrane.orcutt(fit)
+summary(cfit)
+```
+
+# For Live Session
+
+## ARIMA
+
+```{r}
+diff.f <- artrans.wge(log(data$carrier_delay), phi.tr = c(1))
+est <- est.ar.wge(diff.f, p = 12)
+
+artrans.wge(diff.f, phi.tr = est$phi)
+
+est$phi
+est$avar
+```
+
+$$
+(1 - 0.58B -0.55B^2 -0.60B^2 -0.48B^3 -0.41B^4 -0.40B^5
+ -0.31B^6 -0.32B^7 -0.32B^8 -0.31B^9 -0.38B^{10}+ 0.15B^{11}) (1-B) X_t = a_t \,\,\,\, \sigma_a^2 = 0.08014
+$$
+
+## Seasonal
+
+$$
+(1-0.4148)(1-B^{12}) X_t = a_t \,\,\,\,\, \sigma^2_a = 0.112
+$$
+
+```{r}
+diff_test <- artrans.wge(log(data$carrier_delay), phi.tr = c(rep(0,11),1))
+aic5.wge(diff_test)
+est <- est.ar.wge(diff_test, p = 1)
+artrans.wge(diff_test, phi.tr = 0.4148)
+
+est$avar
+```
+
+
+```{r}
+factor.wge(phi = c(rep(0,11),1))
+```
+
+
+
+## Cochrane–Orcutt
+
+```{r}
+t <- seq_along(log(data$carrier_delay))
+fit <- lm(log(data$carrier_delay) ~ t)
+cfit <- cochrane.orcutt(fit)
+summary(cfit)
+
+```
+
+```{r}
+plotts.sample.wge(log(data$carrier_delay) - fit$fitted.values)
+```
+
+
+## Custom Series
+
+```{r}
+# read in data
+data1 <- read.csv('./live_session_assignments/daily-climate-time-series-data/DailyDelhiClimateTest.csv')
+data2 <- read.csv('./live_session_assignments/daily-climate-time-series-data/DailyDelhiClimateTrain.csv')
+data <- rbind(data2, data1)
+
+data['seq'] <- seq_along(data[, 'humidity'])
+```
+
+```{r}
+plotts.sample.wge(data$humidity)
+diff.1 <- artrans.wge(data$humidity, 1)
+aic5.wge(diff.1, type = 'bic')
+aic5.wge(diff.1, type = 'aic')
+plotts.sample.wge(diff.1)
+vals <- est.arma.wge(diff.1,p = 3, q = 1)
+diff.1 <- artrans.wge(diff.1, phi.tr = vals$phi)
+```
+
+```{r}
+sd(diff.1)
+```
+
+
+$$
+(1 - B) X_t = a_t \,\,\,\, \sigma_a^2 = 8.02
+$$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
