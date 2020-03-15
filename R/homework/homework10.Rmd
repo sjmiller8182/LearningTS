@@ -1,0 +1,308 @@
+---
+title: "homework 10"
+author: "Stuart Miller"
+date: "March 14, 2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tswge)
+```
+
+# Homework 10
+
+## Problem 8.1
+
+Are the following datasets consistent with white noise?
+
+The realizations and autocorrelations of 1a and 1d appear to consistent with white noise.
+
+The ACF of 1b does not appear to be consistent with white noise.
+
+The realization of 1c does not apprear to be consistent with white noise.
+
+```{r}
+data("prob8.1a")
+data("prob8.1b")
+data("prob8.1c")
+data("prob8.1d")
+
+plotts.sample.wge(prob8.1b)
+```
+
+
+## Problem 8.2
+
+### Part A
+
+Only one root of the fit model is close to the roots of the actual model.
+
+```{r}
+phi = c(1.5, -1.21, 0.455)
+factor.wge(phi)
+gen <- gen.arma.wge(200, phi = phi, sn = 100)
+aic5.wge(gen, p = 0:8, q = 0:3)
+vals <- est.arma.wge(gen, p = 6, q = 2)
+mean(gen-50)
+vals$avar
+```
+
+**Model specification**
+
+$$
+\left( 1 + 0.299B - 0.228B^2 + 0.109B^3 + 0.606B^4 - 0.306B^5 - 0.0979B^6 \right) 
+\left( X_t - 50.107 \right)
+ = a_t
+\,\,\,\,
+\sigma_a^2 = 0.8052
+$$
+
+### Part B
+
+The fit appears to capture the original model fairly well.
+
+```{r}
+phi = c(1.6, -1.7, 1.28, -0.72)
+factor.wge(phi)
+gen <- gen.arma.wge(200, phi = phi, sn = 100)
+aic5.wge(gen, p = 0:8, q = 0:3)
+vals <- est.arma.wge(gen, p = 4, q = 0)
+mean(gen-200)
+vals$avar
+```
+
+**Model specification**
+
+$$
+\left( 1 - 1.5810B + 1.7833B^2 - 1.3939B^3 + 0.7949B^4  \right)  
+\left( X_t -200.02 \right)
+= a_t
+\,\,\,\,
+\sigma_a^2 = 0.8125
+$$
+
+
+### Part C
+
+The fit appears to capture the original model fairly well.
+
+```{r}
+phi = c(1 , -1.76, 0.8, -0.72)
+factor.wge(phi)
+gen <- gen.arma.wge(200, phi = phi, sn = 100)
+aic5.wge(gen, p = 0:8, q = 0:3)
+vals <- est.arma.wge(gen, p = 4, q = 0)
+mean(gen-200)
+vals$avar
+```
+
+**Model specification**
+
+$$
+\left( 1 - 1.0121B + 1.8126B^2 - 0.8880B^3 + 0.7861B^4  \right)  
+\left( X_t -199.99 \right)
+= a_t
+\,\,\,\,
+\sigma_a^2 = 0.843
+$$
+
+## Problem 8.3
+
+### Part A
+
+```{r}
+data("wtcrude")
+
+plotts.sample.wge(wtcrude)
+
+aic5.wge(wtcrude, p = 0:5, q = 0:2)
+est <-  est.arma.wge(wtcrude, 3, 2)
+factor.wge(est$theta)
+mean(wtcrude)
+est$avar
+```
+
+$$
+\left(1 - 2.3254B + 2.0124B^2 - 0.6694B^3  \right) \left( X_t  + 21.98 \right) = 
+\left( 1 - 1.0174B + 0.6010B^2  \right) a_t 
+\,\,\,\,
+\sigma_a^2 = 21.9835
+$$
+
+
+### Part B
+
+```{r}
+data("eco.mort30")
+
+plotts.sample.wge(eco.mort30)
+
+aic5.wge(eco.mort30, p = 0:8, q = 0:3)
+est <-  est.arma.wge(eco.mort30, 6, 2)
+factor.wge(est$theta)
+mean(eco.mort30)
+est$avar
+```
+
+$$
+\left(1 - 0.5538B + 0.2136B^2 - 0.8615B^3 
++ 0.4133B^4 - 0.3464B^5 + 0.1528B^6   \right) 
+\left( X_t  + 8.97 \right) = 
+\left( 1 + 1.0228 B + 0.8847 B^2 \right) a_t 
+\,\,\,\,
+\sigma_a^2 = 0.064
+$$
+
+### Part C
+
+```{r}
+data("hadley")
+
+plotts.sample.wge(hadley)
+
+aic5.wge(hadley, p = 0:8, q = 0:3)
+est <-  est.arma.wge(eco.mort30, 2, 2)
+factor.wge(est$theta)
+mean(hadley)
+est$avar
+```
+
+$$
+\left(1 - 0.5255B - 0.4578B^2 \right) 
+\left( X_t  - 0.168 \right) = 
+\left( 1 + 1.0676 B + 0.3428 B^2 \right) a_t 
+\,\,\,\,
+\sigma_a^2 = 0.0669
+$$
+
+
+
+## Problem 8.5
+
+The following are the non-stationary factors from the realization
+
+Factor                 Roots                Abs Recip    System Freq 
+1+0.9992B             -1.0008               0.9992       0.5000
+1+1.0101B+0.9907B^2   -0.5098+-0.8657i      0.9954       0.3347
+1-1.0089B+0.9876B^2    0.5108+-0.8670i      0.9938       0.1653
+
+
+
+
+```{r}
+gen <- gen.aruma.wge(200, s = 6, phi = 0.8, sn = 100) - 25
+est.ar.wge(gen, p = 10, type = 'burg')
+transformed <- artrans.wge(gen, phi.tr = c(rep(0,5),1))
+aic5.wge(transformed)
+est.arma.wge(transformed, p = 1)
+```
+
+
+## Problem 8.6
+
+### Part A
+
+```{r}
+data("freight")
+plotts.sample.wge(freight)
+diff1 <- artrans.wge(freight, phi.tr = 1)
+diff1.12 <- artrans.wge(freight, phi.tr = c(rep(0,11),1))
+aic5.wge(diff1.12)
+est.ar.wge(diff1.12, p = 2)
+```
+
+### Part B
+
+```{r}
+data("freeze")
+plotts.sample.wge(freeze)
+est.ar.wge(freeze, p = 15)
+diff1 <- artrans.wge(freeze, phi.tr = c(1.97, -1))
+plotts.sample.wge(diff1)
+aic5.wge(diff1)
+est <- est.arma.wge(diff1, q = 3)
+factor.wge(est$theta)
+
+plotts.sample.wge( est$res )
+
+```
+
+### Part C
+
+```{r}
+data("lavon")
+plotts.sample.wge(lavon)
+
+est.ar.wge(lavon, 15)
+
+
+diff1 <- artrans.wge(lavon, phi.tr = c(rep(0,3),1))
+
+est.ar.wge(diff1, 15)
+
+diff1.s4 <- artrans.wge(diff1, phi.tr = c(rep(0,3),1))
+
+aic5.wge(diff1, p = 0:17)
+est.arma.wge(diff1, p = 2, q = 1)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,224 @@
+---
+title: "homework_9"
+author: "Stuart Miller"
+date: "March 14, 2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tswge)
+```
+
+# Homework 9
+
+## Problem 7.3
+
+### Part A
+
+Find the model estimates for an AR(2) and AR(8) fitted to the sunspot data with mle, YW, and burg methods.
+
+```{r}
+data("sunspot.classic")
+
+# fit the AR(2)
+cat('ML estimate of AR(2)\n')
+est.ml.ar2 <- est.ar.wge(sunspot.classic, p = 2)
+cat('YW estimate of AR(2)\n')
+est.yw.ar2 <- est.ar.wge(sunspot.classic, p = 2, type = 'yw')
+cat('Burg estimate of AR(2)\n')
+est.b.ar2 <- est.ar.wge(sunspot.classic, p = 2, type = 'burg')
+
+
+# fit the AR(2)
+cat('ML estimate of AR(2)\n')
+est.ml.ar8 <- est.ar.wge(sunspot.classic, p = 8)
+cat('YW estimate of AR(2)\n')
+est.yw.ar8 <- est.ar.wge(sunspot.classic, p = 8, type = 'yw')
+cat('Burg estimate of AR(2)\n')
+est.b.ar8 <- est.ar.wge(sunspot.classic, p = 8, type = 'burg')
+```
+
+### Part B
+
+Find the model estimates for an AR(1) fitted to the given data with mle, YW, and burg methods.
+
+```{r}
+dat <- c(26.8, 27.8, 30.0, 31.6, 33.0,
+         34.2, 34.1, 33.2, 31.7, 31.5,
+         31.9, 31.5, 30.0, 29.4, 29.9)
+
+cat('ML estimate of AR(1)\n')
+est.ml.ar2 <- est.ar.wge(dat, p = 1)
+cat('YW estimate of AR(1)\n')
+est.yw.ar2 <- est.ar.wge(dat, p = 1, type = 'yw')
+cat('Burg estimate of AR(1)\n')
+est.b.ar2 <- est.ar.wge(dat, p = 1, type = 'burg')
+```
+
+
+### Part C
+
+Find the model estimates for an AR(2) fitted to the given data with mle, YW, and burg methods.
+
+```{r}
+
+cat('ML estimate of AR(2)\n')
+est.ml.ar2 <- est.ar.wge(dat, p = 2)
+cat('YW estimate of AR(2)\n')
+est.yw.ar2 <- est.ar.wge(dat, p = 2, type = 'yw')
+cat('Burg estimate of AR(2)\n')
+est.b.ar2 <- est.ar.wge(dat, p = 2, type = 'burg')
+```
+
+
+## Problem 7.4
+
+Generate a realization from each model and find the mle, YW, and burg for each.
+
+Burg and ML estimates appear to be pretty good,
+YW is not that good on higher order models and root close to unity.
+
+```{r}
+phi1 <- c(1.3, -0.6)
+phi2 <- c(3.1, -4.1, 2.63, -0.72)
+phi3 <- c(2.69, -2.583, 0.891)
+```
+
+### Part A
+
+```{r}
+
+dat <- gen.arma.wge(100, phi = phi1)
+
+cat('ML estimate of AR(2)\n')
+est.ml.ar <- est.ar.wge(dat, p = 2)
+cat('YW estimate of AR(2)\n')
+est.yw.ar <- est.ar.wge(dat, p = 2, type = 'yw')
+cat('Burg estimate of AR(2)\n')
+est.b.ar <- est.ar.wge(dat, p = 2, type = 'burg')
+```
+
+
+### Part B
+
+```{r}
+
+dat <- gen.arma.wge(100, phi = phi2)
+
+cat('ML estimate of AR(2)\n')
+est.ml.ar <- est.ar.wge(dat, p = 4)
+cat('YW estimate of AR(2)\n')
+est.yw.ar <- est.ar.wge(dat, p = 4, type = 'yw')
+cat('Burg estimate of AR(2)\n')
+est.b.ar <- est.ar.wge(dat, p = 4, type = 'burg')
+```
+
+### Part C
+
+```{r}
+
+dat <- gen.arma.wge(100, phi = phi3)
+
+cat('ML estimate of AR(2)\n')
+est.ml.ar <- est.ar.wge(dat, p = 3)
+cat('YW estimate of AR(2)\n')
+est.yw.ar <- est.ar.wge(dat, p = 3, type = 'yw')
+cat('Burg estimate of AR(2)\n')
+est.b.ar <- est.ar.wge(dat, p = 3, type = 'burg')
+```
+
+
+
+
+## Problem 7.5
+
+```{r}
+parzen.wge(sunspot.classic)
+plotts.true.wge(n = length(sunspot.classic), p = est.ml.ar2$phi)
+plotts.true.wge(n = length(sunspot.classic), p = est.ml.ar8$phi)
+```
+
+## Problem 7.6
+
+```{r}
+dat <- gen.arma.wge(100, phi = phi2)
+
+cat('ML estimate of AR(2)\n')
+est.ml.ar <- est.ar.wge(dat, p = 4)
+cat('YW estimate of AR(2)\n')
+est.yw.ar <- est.ar.wge(dat, p = 4, type = 'yw')
+cat('Burg estimate of AR(2)\n')
+est.b.ar <- est.ar.wge(dat, p = 4, type = 'burg')
+
+parzen.wge(dat)
+plotts.true.wge(length(dat), p = est.ml.ar$phi)
+plotts.true.wge(length(dat), p = est.yw.ar$phi)
+plotts.true.wge(length(dat), p = est.b.ar$phi)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
