@@ -4,17 +4,20 @@
 
 Note files are expected to be viewed in the given order.
 
-* [Glossary](./notes/build/glossary.pdf)
-* [Prelimiaries](./notes/build/preliminaries.pdf)
-* [Stationary Time Series](./notes/build/stationarity.pdf)
-* [Frequency Analysis](./notes/build/frequency_domain.pdf)
-* [Backshift Notation](./notes/build/backshift_operator.pdf)
-* [Filtering](./notes/build/filtering.pdf)
-* [Autoregressive Models (AR)](./notes/build/autoregressive_models.pdf)
-* [Moving Average Models (MA)](./notes/build/moving_average_models.pdf)
-* [Autoregressive Moving Average Models (ARMA)](./notes/build/arma_models.pdf)
-* [Non-Stationary Models (ARIMA and ARUMA)](./notes/build/arima_aruma_models.pdf)
-* [Forecasting](./notes/build/forecasting.pdf)
+* [Glossary](./notes/build/glossary.html)
+* [Prelimiaries](./notes/build/preliminaries.html)
+* [Stationary Time Series](./notes/build/stationarity.html)
+* [Frequency Analysis](./notes/build/frequency_domain.html)
+* [Backshift Notation](./notes/build/backshift_operator.html)
+* [Filtering](./notes/build/filtering.html)
+* [Autoregressive Models (AR)](./notes/build/autoregressive_models.html)
+* [Moving Average Models (MA)](./notes/build/moving_average_models.html)
+* [Autoregressive Moving Average Models (ARMA)](./notes/build/arma_models.html)
+* [Non-Stationary Models (ARIMA and ARUMA)](./notes/build/arima_aruma_models.html)
+* [Forecasting](./notes/build/forecasting.html)
+* [Model ID and Model Assessment](./notes/build/model_id.html)
+* [Multivariate Time Series](./notes/build/multivariate.html)
+* [Neural Networks](./notes/build/nn.html)
 
 ### Reference Sheets
 
