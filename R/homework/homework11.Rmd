@@ -1,0 +1,355 @@
+---
+title: "Homework 11"
+author: "Stuart Miller"
+date: "March 17, 2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tswge)
+library(tswgewrapped)
+```
+
+# Homework 11
+
+## Problem 9.1
+
+### Part A
+
+Fit a model to a realization generated from the known model using the best ID based on AIC.
+
+```{r}
+phi = c(1.5, -1.21, 0.455)
+gen <- gen.arma.wge(200, phi = phi, sn = 100)
+aic5.wge(gen, p = 0:8, q = 0:3)
+vals <- est.arma.wge(gen, p = 6, q = 2)
+# check for whiteness of the residuals
+white_noise_eval(vals$res, 6, 2)
+```
+
+Plot the ARMA spectral density and the estimated windowed spectral density.
+
+The spectral density plots are similar.
+However, the is a strange notch in the true spectral density plot.
+
+```{r}
+a <- parzen.wge(gen)
+a <- plotts.true.wge( phi = vals$phi, theta = vals$theta)
+```
+
+
+Validate the model based on a forecast.
+
+The last 10 data points will be used for validation.
+We can see that the forecast follows the validation steps very well.
+
+```{r}
+fore.arma.wge(gen, phi = vals$phi, theta = vals$theta,
+              lastn = T, n.ahead = 10)
+```
+
+Generate some simulations from the fitted model to compare to the original realization
+
+Realizations appear to be similar.
+In general, they tend to express the type of oscillatory behavior seen in the original realization.
+
+```{r}
+gen.arma.wge(200, phi = vals$phi, theta = vals$theta)
+```
+
+
+### Part B
+
+Fit a model to a realization generated from the known model using the best ID based on AIC.
+
+The model selected by AIC appears to reduce the residuals to white noise.
+
+```{r}
+phi = c(1.6, -1.7, 1.28, -0.72)
+factor.wge(phi)
+gen <- gen.arma.wge(200, phi = phi, sn = 100)
+aic5.wge(gen, p = 0:8, q = 0:3)
+vals <- est.arma.wge(gen, p = 4, q = 0)
+# check for whiteness of the residuals
+white_noise_eval(vals$res, 4, 0)
+```
+
+Plot the ARMA spectral density and the estimated windowed spectral density.
+
+The spectral density plots are similar.
+The spectral density of the fitted model captures the primary shape of the sample spectral density.
+
+```{r}
+a <- parzen.wge(gen)
+a <- plotts.true.wge( phi = vals$phi, theta = vals$theta)
+```
+
+
+Validate the model based on a forecast.
+
+The last 10 data points will be used for validation.
+We can see that the forecast follows the validation steps very well.
+
+```{r}
+fore.arma.wge(gen, phi = vals$phi, theta = vals$theta,
+              lastn = T, n.ahead = 10)
+```
+
+Generate some simulations from the fitted model to compare to the original realization
+
+Realizations appear to be similar.
+In general, they tend to express the type of oscillatory behavior seen in the original realization.
+
+```{r}
+gen.arma.wge(200, phi = vals$phi, theta = vals$theta)
+```
+
+
+### Part C
+
+Fit a model to a realization generated from the known model using the best ID based on AIC.
+
+The model selected by AIC appears to reduce the residuals to white noise.
+
+```{r}
+phi = c(1 , -1.76, 0.8, -0.72)
+factor.wge(phi)
+gen <- gen.arma.wge(200, phi = phi, sn = 100)
+aic5.wge(gen, p = 0:8, q = 0:3)
+vals <- est.arma.wge(gen, p = 4, q = 0)
+# check for whiteness of the residuals
+white_noise_eval(vals$res, 4, 0)
+```
+
+Plot the ARMA spectral density and the estimated windowed spectral density.
+
+The spectral density plots are similar.
+The spectral density of the fitted model captures the primary shape of the sample spectral density.
+
+```{r}
+a <- parzen.wge(gen)
+a <- plotts.true.wge( phi = vals$phi, theta = vals$theta)
+```
+
+
+Validate the model based on a forecast.
+
+The last 10 data points will be used for validation.
+We can see that the forecast follows the validation steps very well.
+
+```{r}
+fore.arma.wge(gen, phi = vals$phi, theta = vals$theta,
+              lastn = T, n.ahead = 10)
+```
+
+Generate some simulations from the fitted model to compare to the original realization
+
+Realizations appear to be similar.
+In general, they tend to express the type of oscillatory behavior seen in the original realization.
+
+```{r}
+gen.arma.wge(200, phi = vals$phi, theta = vals$theta)
+```
+
+
+
+## Problem 9.2
+
+### Part A
+
+The residuals of the fit model do not appear to be consistent with white noise, 
+but the ACF does appear to be consistent.
+
+```{r}
+data("wtcrude")
+
+plotts.sample.wge(wtcrude)
+
+aic5.wge(wtcrude, p = 0:8, q = 0:2)
+vals <- est.arma.wge(wtcrude, p = 7, q = 2)
+# check for whiteness of the residuals
+white_noise_eval(vals$res, 7, 2)
+```
+
+Plot the ARMA spectral density and the estimated windowed spectral density.
+
+The spectral density plots are similar.
+The spectral density of the fitted model captures the primary shape of the sample spectral density.
+
+```{r}
+a <- parzen.wge(wtcrude)
+a <- plotts.true.wge( phi = vals$phi, theta = vals$theta)
+```
+
+
+Validate the model based on a forecast.
+
+The last 10 data points will be used for validation.
+We can see that the the movement of the realization is captures by the forecast limits,
+but the forcast is a bit lower than the actual behavior.
+
+```{r}
+fore.arma.wge(wtcrude, phi = vals$phi, theta = vals$theta,
+              lastn = T, n.ahead = 10)
+```
+
+Generate some simulations from the fitted model to compare to the original realization
+
+Realizations appear to be similar.
+
+```{r}
+gen.arma.wge(200, phi = vals$phi, theta = vals$theta)
+```
+
+
+
+
+
+
+### Part B
+
+The residuals of the fitted model do not appear to be consistent with white noise.
+The ACF ACF appears to be consistent with white noise and the Ljung-Box tests fail to reject the null hypothesis.
+
+```{r}
+data("eco.mort30")
+
+plotts.sample.wge(eco.mort30)
+
+aic5.wge(eco.mort30, p = 0:8, q = 0:3)
+vals <- est.arma.wge(eco.mort30, p = 6, q = 2)
+# check for whiteness of the residuals
+white_noise_eval(vals$res, 6, 2)
+```
+
+Plot the ARMA spectral density and the estimated windowed spectral density.
+
+The spectral density plots are similar.
+The spectral density of the fitted model captures the primary shape of the sample spectral density.
+
+```{r}
+a <- parzen.wge(eco.mort30)
+a <- plotts.true.wge( phi = vals$phi, theta = vals$theta)
+```
+
+
+Validate the model based on a forecast.
+
+The last 50 data points will be used for validation.
+The forecast does not appear to track the movements of the realization.
+The realization moves down, but the forecase is up to the mean.
+
+```{r}
+fore.arma.wge(eco.mort30, phi = vals$phi, theta = vals$theta,
+              lastn = T, n.ahead = 50)
+```
+
+Generate some simulations from the fitted model to compare to the original realization
+
+Realizations appear to be similar.
+In general, they tend to express the type of oscillatory behavior seen in the original realization.
+
+```{r}
+gen.arma.wge(200, phi = vals$phi, theta = vals$theta)
+```
+
+
+
+
+### Part C
+
+The residuals appear to be consistent with white noise. 
+Additionally, the ACF appear to be consistent with white noise and the Ljung-Box tests fail to reject the null hypothesis.
+
+```{r}
+data("hadley")
+
+plotts.sample.wge(hadley)
+
+aic5.wge(hadley, p = 0:8, q = 0:3)
+vals <- est.arma.wge(hadley, p = 4, q = 2)
+# check for whiteness of the residuals
+white_noise_eval(vals$res, 4, 2)
+```
+
+Plot the ARMA spectral density and the estimated windowed spectral density.
+
+The spectral density plots are similar.
+The spectral density of the fitted model captures the primary shape of the sample spectral density.
+
+```{r}
+a <- parzen.wge(hadley)
+a <- plotts.true.wge( phi = vals$phi, theta = vals$theta)
+```
+
+
+Validate the model based on a forecast.
+
+The last 20 data points will be used for validation.
+We can see that the forecast does not forecast the movement of the realization very well.
+
+```{r}
+fore.arma.wge(hadley, phi = vals$phi, theta = vals$theta,
+              lastn = T, n.ahead = 20)
+```
+
+Generate some simulations from the fitted model to compare to the original realization
+
+Realizations appear to be similar.
+
+```{r}
+gen.arma.wge(200, phi = vals$phi, theta = vals$theta)
+```
+
+
+## Problem 9.3
+
+```{r}
+gen <- gen.aruma.wge(200, s = 6, phi = 0.8, sn = 100) - 25
+est <- est.ar.wge(gen, p = 10, type = 'burg')
+transformed <- artrans.wge(gen, phi.tr = c(rep(0,5),1))
+aic5.wge(transformed)
+est <- est.arma.wge(transformed, p = 1)
+```
+
+Check For White Noise Residuals
+
+Based on the plots and the Ljung-Box tests, the residuals appear to be consistent with white noise.
+
+```{r}
+# check for whiteness of the residuals
+white_noise_eval(est$res, 1, 0)
+```
+
+Plot the ARMA spectral density and the estimated windowed spectral density.
+
+The spectral density plots are similar.
+The spectral density of the fitted model captures the primary shape of the sample spectral density.
+
+```{r}
+a <- parzen.wge(transformed)
+a <- plotts.true.wge( phi = est$phi, theta = est$theta)
+```
+
+
+Validate the model based on a forecast.
+
+The last 20 data points will be used for validation.
+We can see that the forecast does not forecast the movement of the realization very well.
+
+```{r}
+fore.aruma.wge(transformed, phi = est$phi, theta = est$theta, s = 6,
+              lastn = T, n.ahead = 20)
+```
+
+Generate some simulations from the fitted model to compare to the original realization
+
+Realizations appear to be similar.
+
+```{r}
+gen.aruma.wge(200, phi = vals$phi, theta = vals$theta, s = 6)
+```
+
+
+

@@ -1,0 +1,272 @@
+---
+title: "mlr_correlated_errors"
+author: "Stuart Miller"
+date: "March 18, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tswge)
+library(vars)
+library(tidyverse)
+library(RColorBrewer)
+```
+
+## Variable Lags
+
+Consider the attached data set in WhatIsTheLag.csv. 
+Use the cross-correlation function (ccf()) to find evidence of the lag in which X1 is related to Y. 
+That is, which k has the most evidence of Xt-k being related to Yt?
+
+```{r}
+dat <- read_csv('./whatisthelag.csv')
+ccf(dat$Y, dat$X1_1, lag.max = 10)
+```
+
+
+## VAR Example
+
+```{r}
+x1.25=c( -1.03, 0.11, -0.18, 0.20, -0.99, -1.63, 1.07, 2.26, -0.49, -1.54, 0.45, 0.92,
+        -0.05, -1.18, 0.90, 1.17, 0.31, 1.19, 0.27, -0.09, 0.23, -1.91, 0.46, 3.61, -0.03)
+x2.25=c( -0.82, 0.54, 1.13, -0.24, -0.77, 0.22, 0.46, -0.03, -0.59, 0.45, 0.59, 0.15,
+        0.60, 0.13, -0.04, 0.12, -0.96, 0.23, 1.81, -0.01, -0.95, -0.55, -0.15, 0.71, 0.90)
+x1=x1.25[1:20]
+x2=x2.25[1:20] 
+p1=aic.wge(x1,p=0:8,q=0:0)
+# aic picks p=2
+x1.est=est.ar.wge(x1,p=p1$p)
+fore.arma.wge(x1,phi=x1.est$phi,n.ahead=5,lastn=FALSE,limits=FALSE)
+p2=aic.wge(x2,p=0:8,q=0:0)
+# aic picks p=2
+x2.est=est.ar.wge(x1,p=p2$p)
+fore.arma.wge(x2,phi=x2.est$phi,n.ahead=5,lastn=FALSE,limits=FALSE)
+#
+# VAR and VARselect are from CRAN package vars
+X=cbind(x1,x2)
+VARselect(X, lag.max = 6, type = "const",season = NULL, exogen = NULL)
+#VARselect picks p=5 (using AIC)
+lsfit=VAR(X,p=5,type="const")
+preds=predict(lsfit,n.ahead=5)
+# preds$fcst$x1[1,1] - [5,1] are the VAR forecasts for x1. Similar for x2
+fanchart(preds, colors = brewer.pal(n = 8, name = "Blues")) # Change color pallet to make distinguishable.
+
+summary(lsfit)
+```
+
+## In Class VAR
+
+```{r}
+dat <- read_csv('./businesssales.csv')[2:5]
+dat
+VARselect(dat, lag.max = 6, type = "const",season = NULL, exogen = NULL)
+lsfit=VAR(dat,p=2,type="const")
+summary(lsfit)
+AIC(lsfit)
+```
+
+## Forecast LA_Cmort_Study
+
+Your goal is to utilize all given information to provide the most useful forecasts for the next 20 weeks of cardiac mortality. 
+
+```{r}
+# get the data
+dat <- read_csv('./la_cmort_study.csv')[2:4]
+
+# create a data split
+end <- length(dat$cmort)
+val.start <- end - 20 + 1
+val.set <- dat[val.start : end, ]
+dat.train <- dat[1 : (val.start - 1), ]
+
+```
+
+```{r}
+plotts.sample.wge(dat$cmort)
+plotts.sample.wge(dat$temp)
+plotts.sample.wge(dat$part)
+```
+
+### Cross-Correlation Plots
+
+```{r}
+ccf(dat$cmort, dat$temp)
+ccf(dat$cmort, dat$part)
+```
+
+### Select, Fit, and Validate VAR Models
+
+```{r}
+# VAR analysis
+# fit with trend
+VARselect(dat.train, lag.max = 40, type = "trend",season = NULL, exogen = NULL)
+lsfit.trend.17 <- VAR(dat.train,p=17,type="trend")
+summary(lsfit.trend.17)
+AIC(lsfit.trend.17)
+# get forecast on next 20
+preds.trend.17 <- predict(lsfit.trend.17,n.ahead=20)
+
+mean((preds.trend.17$fcst$cmort[ , 1] - val.set$cmort)^2)
+
+# fit without trend
+VARselect(dat.train, lag.max = 40, type = "const",season = NULL, exogen = NULL)
+lsfit.const.14=VAR(dat.train,p=14,type="const")
+summary(lsfit.const.14)
+AIC(lsfit.const.14)
+# get forecast on next 20
+preds.const.14 <- predict(lsfit.const.14,n.ahead=20)
+preds.const.14$fcst$cmort[ , 1]
+
+mean((preds.const.14$fcst$cmort[ , 1] - val.set$cmort)^2)
+
+# generate plot
+plot(seq_along(dat.train$cmort), dat.train$cmort, xlim = c(350, 510))
+points(seq(val.start, end), val.set$cmort)
+points(seq(val.start, end), preds.const.14$fcst$cmort[ , 1], type = 'b', pch = 15)
+
+plot(seq_along(dat.train$cmort), dat.train$cmort, xlim = c(350, 510))
+points(seq(val.start, end), val.set$cmort)
+points(seq(val.start, end), preds.trend.17$fcst$cmort[ , 1], type = 'b', pch = 15)
+
+```
+
+### Forecast Future
+
+```{r}
+lsfit <- VAR(dat,p=17,type="trend")
+preds <- predict(lsfit,n.ahead=20)
+
+plot(seq_along(dat$cmort), dat$cmort, xlim = c(350, 530))
+
+points(seq((end + 1), (end + 20)),
+       preds$fcst$cmort[ , 1], type = 'b', pch = 15)
+
+fanchart(preds, names = c('cmort'), colors = brewer.pal(n = 8, name = "Blues"), xlim = c(350, 530))
+```
+
+## Calculate Error on Sales Forecasts
+
+```{r}
+dat <- read_csv('./businesssales.csv')[2:5]
+
+end <- length(dat$sales)
+
+# fit on the data before the prediction length
+ksfit <- lm(sales ~ ad_tv + ad_online + discount, data = dat[1:(end - 5), ])
+aic.wge(ksfit$residuals, 0:8, q = 0)
+fit <- arima(dat$sales[1:(end - 5)], order = c(7, 0, 0), xreg = dat[1:(end - 5) , 2:4])
+# predict on the last 5 values
+preds <- predict(fit, n.ahead = 5, newxreg = dat[ (end - 4):end, 2:4])
+
+# show the predictions
+preds$pred
+
+```
+
+
+```{r}
+mean( (preds$pred - dat$sales[ (end - 4):end])^2 )
+```
+
+```{r}
+plot(seq_along(preds$pred), preds$pred, ylim = c(45, 65))
+points(seq_along(preds$pred), dat$sales[ (end - 4):end], pch = 15)
+```
+
+
+
+```{r}
+VARselect(dat[1:(end - 5), ], lag.max = 6, type = "const",season = NULL, exogen = NULL)
+lsfit <- VAR(dat[1:(end - 5), ], p=2, type="const")
+summary(lsfit)
+AIC(lsfit)
+```
+
+```{r}
+preds <- predict(lsfit, n.ahead = 5)
+preds$fcst$sales[ , 1]
+
+mean( (preds$fcst$sales[ , 1] - dat$sales[ (end - 4):end])^2 )
+```
+
+
+```{r}
+plot(seq_along(preds$fcst$sales[ , 1]), preds$fcst$sales[ , 1], ylim = c(45, 65))
+points(seq_along(preds$fcst$sales[ , 1]), dat$sales[ (end - 4):end], pch = 15)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

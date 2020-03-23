@@ -1,0 +1,222 @@
+---
+title: "nn_mlp"
+author: "Stuart Miller"
+date: "March 23, 2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(nnfor)
+library(tseries)
+library(tswge)
+dat <- read_csv('./swadelay.csv')
+```
+
+## Nerual Networks and MLPs
+
+### Univariate MLPs
+
+```{r}
+SWA.train <- ts(dat$arr_delay[1:141],
+                start = c(2004, 1),
+                frequency = 12)
+SWA.test <- ts(dat$arr_delay[142:177],
+                start = c(2015, 10),
+                frequency = 12)
+
+set.seed(2)
+
+fit.mlp <- mlp(SWA.train, reps = 50, comb = 'mean')
+fit.mlp
+```
+
+Represetation of model.
+
+Pink nodes are for seasonal inputs.
+Gray nodes are the lags
+
+```{r}
+plot(fit.mlp)
+```
+
+
+
+```{r}
+fore.mlp <- forecast(fit.mlp, h = 36)
+plot(fore.mlp)
+```
+
+
+
+```{r}
+ASE <- mean( (SWA.test - fore.mlp$mean)^2 )
+ASE
+```
+
+
+```{r}
+set.seed(2)
+fit.mlp <- mlp(SWA.train, reps = 20, comb = 'median',
+               allow.det.season = F,
+               lags = c(1,2,3,4,5,6,7,8,9,10,11,12))
+fit.mlp
+fore.mlp <- forecast(fit.mlp, h = 36)
+ASE <- mean( (SWA.test - fore.mlp$mean)^2 )
+ASE
+```
+
+
+
+```{r}
+set.seed(2)
+fit.mlp <- mlp(SWA.train, reps = 20, comb = 'median',
+               allow.det.season = F,
+               difforder = c(12))
+fit.mlp
+fore.mlp <- forecast(fit.mlp, h = 36)
+ASE <- mean( (SWA.test - fore.mlp$mean)^2 )
+ASE
+```
+
+
+
+```{r}
+set.seed(2)
+fit.mlp <- mlp(SWA.train, difforder = c(1,6,12),
+              allow.det.season = FALSE, reps = 100)
+fit.mlp
+fore.mlp <- forecast(fit.mlp, h = 36)
+ASE <- mean( (SWA.test - fore.mlp$mean)^2 )
+ASE
+```
+
+
+#### Airline Data
+
+```{r}
+data("airlog")
+set.seed(2)
+liar.train <- ts(airlog[1:108],
+                 frequency = 12,
+                 start = c(1949, 1))
+liar.test <- ts(airlog[109:144],
+                frequency = 12,
+                start = c(1958, 1))
+
+fit.mlp <- mlp(liar.train,
+               hd.auto.type = 'cv')
+fit.mlp
+```
+
+
+```{r}
+fore.mlp <- forecast(fit.mlp, h = 36)
+ASE <- mean( (liar.test - fore.mlp$mean)^2 )
+ASE
+```
+
+### Multivariate MLP
+
+```{r}
+dat <- read_csv('./businesssales.csv')[2:5]
+
+```
+
+
+```{r}
+set.seed(2)
+tBS80 <- ts(dat$sales[1:80])
+tBSx <- data.frame(ad_tv = ts(dat$ad_tv),
+                   ad_online = ts(dat$ad_online, frequency = 7),
+                   discount <- ts(dat$discount))
+fit <- mlp(tBS80, xreg = tBSx,
+               hd.auto.type = 'cv')
+f <- forecast(fit, h = 20, xreg = tBSx)
+plot(dat$sales[81:100], type = 'l')
+lines(seq(1,20), f$mean, col = 'blue')
+
+ASE <- mean( (dat$sales[81:100] - f$mean)^2 )
+ASE
+```
+
+
+```{r}
+fit
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
