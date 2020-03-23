@@ -17,6 +17,8 @@ Note files are expected to be viewed in the given order.
 * [Non-Stationary Models (ARIMA and ARUMA)](./arima_aruma_models.ipynb)
 * [Forecasting](./forecasting.ipynb)
 * [Model Identification and Parameter Estimation](./model_id.ipynb)
+* [Multivariate Time Series](./multivariate.ipynb)
+* [Neural Networks](./nn.ipynb)
 
 ## Reference Sheets
 
