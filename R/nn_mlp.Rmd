@@ -147,17 +147,146 @@ fit
 ```
 
 
+### For Live Session
+
+#### Melanoma Subspot Data
+
+Model the sunspot/melanoma data with a MLP. 
+Use the model to provide eight-step-ahead forecasts.
+Finally, calculate the ASE, and compare your NN model to the VAR model we estimated previously.  
+
+```{r}
+data <- read.csv('./Melanoma_Sunspot.csv')
+plotts.sample.wge(data$Melanoma)
+plotts.sample.wge(data$Sunspot)
+```
 
 
 
+```{r}
+set.seed(2)
+
+end <- length(data$Melanoma)
+shift <- 8
+
+dat.test <- ts(data$Melanoma[(end - shift + 1) : end],
+               start = 30)
+dat.train <- ts(data$Melanoma[1: (end - shift)],
+                start = 1)
+
+x.reg <- data.frame(Sunspot = ts(data$Sunspot, frequency = 10))
+
+fit <- mlp(dat.train,
+           xreg = x.reg,
+           reps = 50)
+
+f <- forecast(fit,
+              h = 8, 
+              xreg = x.reg)
+
+plot(f)
+
+mean( (dat.test - f$mean)^2 )
+
+plot(seq_along(dat.test) + length(dat.train), dat.test, type = 'l', 
+     main = 'Neural Net Forecast', xlab = 'Time', ylab = 'Melanoma')
+lines(f$mean, col = 'blue')
 
 
+```
+
+### LA Study
+
+ Model the Schumway pollution data with a MLP model, and provide 10-step-ahead forecasts.
+ Calculate the ASE, and add your analysis to a slide in your Unit 13 For Live Session PowerPoint deck.  
+
+```{r}
+data <- read.csv('./la_cmort_study.csv')
+end <- length(data$cmort)
+
+test <- ts(data$cmort[(end - 10 + 1) : end], 
+           start = end - 10 + 1)
+train <- ts(data$cmort[1 : (end - 10)])
+
+x.reg <- data.frame(
+  part = ts(data$part),
+  temp = ts(data$temp)
+  )
+
+# get seasonal factor 
+val <- plotts.sample.wge(train)
+s <- round(1 / mean(c(val$freq[9], val$freq[10])))
+s
+
+set.seed(2)
+
+fit <- mlp(train, 
+           xreg = x.reg,
+           reps = 50)
+
+f <- forecast(fit,
+              h = 10, 
+              xreg = x.reg)
+
+plot(f)
+
+mean( (test - f$mean)^2 )
+
+plot(seq_along(test) + length(train), test, type = 'l', 
+     main = 'Neural Net Forecast', xlab = 'Time', ylab = 'Cmort')
+lines(f$mean, col = 'blue')
+```
 
 
+#### Custom Series
 
+ Model your time series with a MLP, 
+ and compare it with ARMA/ARIMA models you have fit to it in the past. 
 
+```{r}
+# read in data
+data1 <- read.csv('./live_session_assignments/daily-climate-time-series-data/DailyDelhiClimateTest.csv')
+data2 <- read.csv('./live_session_assignments/daily-climate-time-series-data/DailyDelhiClimateTrain.csv')
 
+set.seed(2)
 
+plotts.sample.wge(data2$humidity)
+
+test <- ts(data1$humidity, start = 1463)
+train <- ts(data2$humidity, start = 1)
+
+fit <- mlp(train, difforder = c(375))
+
+tswgewrapped::evaluate_residuals(fit$fitted - train)
+
+f <- forecast(fit, h = length(test))
+
+ASE <- mean( (test - f$mean)^2 )
+ASE
+
+plot(seq_along(test) + length(train), test, type = 'l', 
+     main = 'Neural Net Forecast', xlab = 'Time', ylab = 'Humidity')
+lines(f$mean, col = 'blue')
+```
+
+```{r}
+diff <- artrans.wge(train, phi.tr = c(rep(0,374),1))
+est <- est.arma.wge(train, 3, 1, factor = F)
+
+# assess residuals
+tswgewrapped::evaluate_residuals(est$res)
+
+# forecast on the test set
+f.univat <- fore.aruma.wge(train,est$phi, est$theta, s = 375, n.ahead = length(test), plot = F)
+
+# calculate MSE
+mean( (test - f.univat$f)^2 )
+
+# plot the forecast with the test set
+plot(seq_along(test) + length(train), test, type = 'l', 
+     main = 'Seasonal + ARMA Forecast', xlab = 'Time', ylab = 'Humidity')
+lines(seq_along(test) + length(train), f.univat$f, col = 'blue')
+```
 
 
 
