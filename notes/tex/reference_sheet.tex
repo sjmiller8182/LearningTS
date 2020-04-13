@@ -357,7 +357,34 @@
 			FI: b_0 + b_1 t + \hat{Z}_{t_0} \left( {l} \right) \pm 
 			z_{1-\alpha/2} \hat{\sigma}_a \left[ \sum_{k=0}^{l-1} \psi_k^2 \right]^{1/2}
 			$$
+	
+	\section{Non-Stationary Tests}
+	
+		\subsection{Dicky-Fuller Test}
 		
+		\begin{align*}
+		H_0:\,The\,\,model\,\,has\,\,a\,\,root\,\,of\,\,+1 \\
+		H_a:\,The\,\,model\,\,does\,\,not\,\,have\,\,a\,\,root\,\,of\,\,+1
+		\end{align*}
+		
+		This test has a high type II error rate, increasing as a root approaches the unit circle.
+	
+		\subsection{Cochrane-Orcutt Test}
+	
+		This is a test for the presence of a linear slope corrected for an AR(1) noise structure.
+		
+		\begin{align*}
+		H_0: b = 0 \\
+		H_a: b \neq 0
+		\end{align*}
+	
+	\section{Metrics}
+		\subsection{AIC - ARMA Objective}
+		
+		$$
+		AIC = ln(\hat{\sigma}_a) + 2 \left(\frac{p + q + 1}{n} \right)
+		$$
+	
 	\section{Filtering}
 	
 		Filters transform time series.
